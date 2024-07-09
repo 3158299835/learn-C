@@ -73,4 +73,21 @@ int main()
     printf("year=%04d\nmonth=%02d\ndate=%02d\n", date / 10000, (date / 100) % 100, date % 100);
 }
 ```
-
+### 学生基本信息输入输出
+ **输入描述：** 学号以及3科成绩，学号和成绩之间用英文分号隔开，成绩之间用英文逗号隔开。
+ **输出描述：** 学号，3科成绩，保留两位小数
+2024-07-09
+#include<stdio.h>
+```
+int main()
+{
+    int num;
+    float x,y,z;
+    scanf("%d;%f,%f,%f",&num,&x,&y,&z);
+    printf("The each subject score of No. %d is %.2f, %.2f, %.2f.",num,x,y,z);
+    
+    return 0;
+}
+```
+- 格式字符串 "%d;%f,%f,%f" 规定了输入数据的格式，&num、&x、&y、&z 分别表示将输入的值存储到对应的变量地址中。
+- %.2f 表示将浮点数按照小数点后保留两位的格式进行输出。
