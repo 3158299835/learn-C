@@ -194,7 +194,7 @@ int main ()
             
 }
 ```
-### 计算求得体积
+### 计算球得体积
  **输入：**一个浮点值0-15
  **输出：**球的体积，小数点保留三位
 这个题考察的是float和double的区别
@@ -202,7 +202,7 @@ float占4字节， double占8字节，所以double的精度会更高
 float在初始化的时候是float = 0.0f：
 double在初始化的时候是float = 0.0lf;或者 0.0   因为0.0默认使用的是double
 代码如下：
-···
+```
 #include <stdio.h>
 
 int main() 
@@ -217,4 +217,4 @@ int main()
     printf("%.3lf\n",v);
     return 0;
 }
-···
+```
