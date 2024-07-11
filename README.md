@@ -325,8 +325,6 @@ char arr[] = "hello world!!!"
 - 使用sizeof函数时，right的下标为 sizeof(arr)/sizeof(arr[0]) - 2
 下面是实现的方法
 ```
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <stdio.h>
 #include <windows.h>//使用Sleep函数需要包含<windows>头文件，Sleep的单位为ms
 #include <string.h>  //使用strlen函数需要包含<string.h>头文件，用来计算字符串字符个数
@@ -355,4 +353,36 @@ int main()
     return 0;
 }
 ```
+### 模拟用户登录
+ **模拟用户登录情景，只能登录三次，三次内成功则提示登陆成功，三次都收入错误，则退出程序** 
+此题考验的是字符串相等
+比较两个字符串是否相等，不能使用 == ，而是应使用一个库函数：strcmp
+```
+#include <stdio.h>
 
+int main()
+{
+    char password[20] = "lzj888666";//定义密码
+    char arr[20] = { 0 };
+    int i = 0;
+    for (i = 0; i < 3; i++)//循环输入三次
+    {
+        printf("请输入密码> ");
+        scanf("%s", arr);
+        if (strcmp(arr,password) == 0)  //比较两个字符串是否相等，不能使用 == ，而是应使用一个库函数：strcmp
+        {
+            printf("密码正确\n");
+            break;//跳出循环
+        }
+        else
+        {
+            printf("密码错误\n");
+        }
+    }
+    if (i == 3)
+    {
+        printf("三次输入密码错误，退出系统\n");
+    }
+    return 0;
+}
+```
