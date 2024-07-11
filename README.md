@@ -71,6 +71,7 @@ int main()
     //除100，让小数点左移两位，保留年份和月份。再对100取模，保留百位内即月份
     //直接取模，保留百位内，即日期
     printf("year=%04d\nmonth=%02d\ndate=%02d\n", date / 10000, (date / 100) % 100, date % 100);
+    return 0;
 }
 ```
 ### 学生基本信息输入输出
@@ -107,6 +108,7 @@ int main() {
         printf("NO");
     }
 }
+    return 0;
 ```
 ### 输出printf的返回值
 2024-07-11
@@ -118,6 +120,7 @@ int main() {
     int a = printf("Hello World!");
     printf("\n");
     printf("%d",a);
+    return 0;
 }
 ```
 printf会打印出字符的个数，\n 等等也算一个字符。
