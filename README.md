@@ -134,7 +134,8 @@ printf("\n%d",n);直接打印这样也能换行。
 
 int main() {
 
-    printf("printf(\"Hello World!\\n\");
+    printf("printf(\"Hello World!\\n\");\n");
+    
 
 }
 ```
