@@ -126,7 +126,7 @@ printf会打印出字符的个数，\n 等等也算一个字符。
 ```
 printf("\n%d",n);直接打印这样也能换行。
 ```
-###输出printf("hello world\n");
+### 输出printf("hello world\n");
 2024-07-11
 这个题考验的是转义字符"\"的运用
 ```
