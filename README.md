@@ -143,6 +143,7 @@ int main() {
 ### 四个数找出最大数
  **输入：** 四个整数，用空格隔开
  **输出：** 一个整数，为四个数的最大的
+2022-07-11
 方法一：存起来再比较
 ```
 #include<stdio.h>
@@ -193,3 +194,27 @@ int main ()
             
 }
 ```
+### 计算求得体积
+ **输入：**一个浮点值0-15
+ **输出：**球的体积，小数点保留三位
+这个题考察的是float和double的区别
+float占4字节， double占8字节，所以double的精度会更高
+float在初始化的时候是float = 0.0f：
+double在初始化的时候是float = 0.0lf;或者 0.0   因为0.0默认使用的是double
+代码如下：
+···
+#include <stdio.h>
+
+int main() 
+{
+    double r = 0.0;
+    double v = 0.0;
+    //输入r
+    scanf("%lf",&r);
+    //计算v
+    v = 4/3 * 3.1415926 * r * r * r;
+    //输出v
+    printf("%.3lf\n",v);
+    return 0;
+}
+···
