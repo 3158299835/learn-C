@@ -92,6 +92,7 @@ int main()
 - 格式字符串 "%d;%f,%f,%f" 规定了输入数据的格式，&num、&x、&y、&z 分别表示将输入的值存储到对应的变量地址中。
 - %.2f 表示将浮点数按照小数点后保留两位的格式进行输出。
 ### 判断输入数字是否为5整除
+2024-07-10
 ```
 #include <stdio.h>
 
@@ -107,3 +108,16 @@ int main() {
     }
 }
 ```
+### 输出printf的返回值
+2024-07-11
+```
+#include <stdio.h>
+
+int main() {
+
+    int a = printf("Hello World!");
+    printf("\n");
+    printf("%d",a);
+}
+```
+printf会打印出字符的个数，\n 等等也算一个字符。
