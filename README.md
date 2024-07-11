@@ -393,8 +393,9 @@ int main()
 rand需要定义一个种子，也就是srand
 - rand的用法是直接int a = rand();
 - srand的用法是srand(一个随机数);    **srand函数期望输入的数字是unsigned int 类型** （可以在手册中查到）
-在这里我们用的是系统读取当前的时间戳time()函数，因为time（） **返回的值是一个 time_t 类型** 的。所以我们需要将返回值 **强制转换为unsigned int类型** 的.而且time不需要输入值，即 **输入NULL** 
- **所以这个随机数产生的函数为** 
+在这里我们用的是系统读取当前的时间戳time()函数，因为time（） **返回的值是一个 time_t 类型** 的。所以我们需要将返回值 **强制转换为unsigned int类型** 的.而且time不需要输入值，即 **输入NULL**
+ 
+ **所以这个随机数可以写：** 
 ```
 srand((unsigned int)time(NULL)); //设置随机数种子
 int a = rand(); //随机数赋值
