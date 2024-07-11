@@ -308,3 +308,47 @@ int main()
     return 0;
 }
 ``` 
+### 输出多个字符从两端移动，向中间汇聚
+例如：
+##############
+h############!
+hel#########!!
+.....
+hello world!!!
+char arr[] = "hello world!!!"
+- 这个 **属于字符串** ，可以用到 **strlen** 来计算字符串的长度
+- 当然也可以继续使用sizeof来计算字符串的长度，即 sz = sizeof(arr)/sizeof(arr[0])。但是计算出的长度不是字符串的长度，他需要减去1。因为 **字符串的结尾处有\0** 。会多计算一个字符。
+
+他们的下标则是计算出的长度-1
+- 使用strlen函数时，right的下标为 strlen（arr）-1
+- 使用sizeof函数时，right的下标为 sizeof(arr)/sizeof(arr[0]) - 2
+下面是实现的方法
+```
+#include <stdio.h>
+ **#include <windows.h>//使用Sleep函数需要包含<windows>头文件，Sleep的单位为ms.** 
+ **#include <string.h>  //使用strlen函数需要包含<string.h>头文件，用来计算字符串字符个数** 
+ **#include <stdlib.h>  //使用system函数需要包含<stdlib.h>头文件，用来执行系统命令** 
+int main()
+{
+    char arr1[] = "hello world!!!";
+    char arr2[] = "##############";
+    
+    int left = 0;
+    int right = strlen(arr1) - 1;
+
+    while(left <= right)
+    {
+        arr1[left] = arr2[left];
+        arr1[right] = arr2[right];//把#填充到原字符对应的地址中
+        Sleep(1000)
+
+        left++;
+        right--; //缩小范围，继续填充
+         **Sleep(1000);** //延迟1秒
+         **system("cls");//system是一个库函数，可以执行系统命令,cls是请清屏指令**    //加上这两行可以在一行上显示出来这中向中间聚拢的效果
+    }
+        printf("%s",arr1); //清理后再打印出来
+    return 0;
+}
+```
+
