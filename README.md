@@ -325,9 +325,9 @@ char arr[] = "hello world!!!"
 下面是实现的方法
 ```
 #include <stdio.h>
- **#include <windows.h>//使用Sleep函数需要包含<windows>头文件，Sleep的单位为ms.** 
- **#include <string.h>  //使用strlen函数需要包含<string.h>头文件，用来计算字符串字符个数** 
- **#include <stdlib.h>  //使用system函数需要包含<stdlib.h>头文件，用来执行系统命令** 
+#include <windows.h>//使用Sleep函数需要包含<windows>头文件，Sleep的单位为ms
+#include <string.h>  //使用strlen函数需要包含<string.h>头文件，用来计算字符串字符个数
+#include <stdlib.h>  //使用system函数需要包含<stdlib.h>头文件，用来执行系统命令
 int main()
 {
     char arr1[] = "hello world!!!";
@@ -344,8 +344,10 @@ int main()
 
         left++;
         right--; //缩小范围，继续填充
+
          **Sleep(1000);** //延迟1秒
-         **system("cls");//system是一个库函数，可以执行系统命令,cls是请清屏指令**    //加上这两行可以在一行上显示出来这中向中间聚拢的效果
+         **system("cls");//system是一个库函数，可以执行系统命令,cls是请清屏指令   
+         //加上这两行可以在一行上显示出来这中向中间聚拢的效果
     }
         printf("%s",arr1); //清理后再打印出来
     return 0;
