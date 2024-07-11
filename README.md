@@ -309,6 +309,7 @@ int main()
 }
 ``` 
 ### 输出多个字符从两端移动，向中间汇聚
+2024-07-11
 例如：
 ##############
 h############!
@@ -324,6 +325,8 @@ char arr[] = "hello world!!!"
 - 使用sizeof函数时，right的下标为 sizeof(arr)/sizeof(arr[0]) - 2
 下面是实现的方法
 ```
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <windows.h>//使用Sleep函数需要包含<windows>头文件，Sleep的单位为ms
 #include <string.h>  //使用strlen函数需要包含<string.h>头文件，用来计算字符串字符个数
@@ -332,24 +335,23 @@ int main()
 {
     char arr1[] = "hello world!!!";
     char arr2[] = "##############";
-    
+
     int left = 0;
     int right = strlen(arr1) - 1;
 
-    while(left <= right)
+    while (left <= right)
     {
-        arr1[left] = arr2[left];
-        arr1[right] = arr2[right];//把#填充到原字符对应的地址中
-        Sleep(1000)
-
+        arr2[left] = arr1[left];
+        arr2[right] = arr1[right];//把#填充到原字符对应的地址中
+        printf("%s\n", arr2); 
+        Sleep(1000);    //延迟1秒
+        system("cls");  //system是一个库函数，可以执行系统命令,cls是请清屏指令  
+        //加上这两行可以在一行上显示出来这中向中间聚拢的效果
         left++;
         right--; //缩小范围，继续填充
-
-         **Sleep(1000);** //延迟1秒
-         **system("cls");//system是一个库函数，可以执行系统命令,cls是请清屏指令   
-         //加上这两行可以在一行上显示出来这中向中间聚拢的效果
     }
-        printf("%s",arr1); //清理后再打印出来
+    printf("%s", arr1); //清屏后再打印出来。
+    //综上就可以实现一行的文字逐渐聚拢的效果
     return 0;
 }
 ```
