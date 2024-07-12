@@ -740,9 +740,28 @@ int main()
 ```
 
 #### 4. 写一个函数，每调用一次这个函数，就会将 num 的值增加1
+- 指针法
 ```
 void add(int *num)
 {
     (*num)++;
 }
+int main ()
+{
+    int num = 0;
+    add(num);
+}
 ```
+- static修饰法//写函数的时候！最好不要用这种东西!!
+```
+void add(int num)
+{
+    num ++;
+}
+int main ()
+{
+   static int num = 0; 
+   add(num)
+}
+```
+其他的就不多写了 也可以直接return num + 1;
