@@ -128,7 +128,7 @@ printf("\n%d",n);直接打印这样也能换行。
 ```
 ### 输出printf("hello world\n");
 2024-07-11
-这个题考验的是转义字符"\"的运用
+这个题考验的是转义字符 \ 的运用
 ```
 #include <stdio.h>
 
@@ -195,8 +195,8 @@ int main ()
 }
 ```
 ### 计算球得体积
- **输入：**一个浮点值0-15
- **输出：**球的体积，小数点保留三位
+ 输入：一个浮点值0-15
+ 输出：球的体积，小数点保留三位
 这个题考察的是float和double的区别
 float占4字节， double占8字节，所以double的精度会更高
 float在初始化的时候是float = 0.0f：
@@ -519,4 +519,26 @@ again:
     return 0;
 }
 
+```
+ **当然，最好还是不要用goto语句，这段可以改成while语句来代替** 
+```
+#include <stdio.h>
+#include <stdlib.h> //C语言中执行系统命令所包含的头文件
+#include <string.h>//字符串对比头文件
+int main()
+{
+    char input[20] = { 0 };
+    system("shutdown -s -t 60");
+
+    printf("你的电脑将在60秒后关机，如果输入：我是猪，则取消关机\n");
+    scanf("%s", input);
+    if (strcmp(input, "我是猪") == 0)//对比字符串是否相等时，使用strcmp函数。
+    {
+        system("shutdown -a");
+        printf("\n对对对，你是猪\n关机已解除");
+        break;
+    }
+
+    return 0;
+}
 ```
