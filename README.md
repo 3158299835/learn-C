@@ -286,7 +286,7 @@ int main()
     int right = sz - 1; //计算右下标
     while(left <= right)
     {
-        int mid = (left + right)/2; //计算范围内中间下标
+        int mid = left + (left + right)/2; //计算范围内中间下标 这里是 为了防止溢出。
         if (arr[mid] > a) //如果查找到的值大于待查找值，那么待查找值的范围为 left - mid（mid-1 成为新的 right）
         {
             right = mid - 1;
@@ -622,6 +622,7 @@ int add(int x,int b)
 - 传址调用是吧函数外部创建的变量的内存地址传递给函数参数的一种调用方式
 - 这种传参方式可以让函数和函数外边的变量建立起真正的联系，也就是函数内部可以直接操作函数外部的变量。
 ### 函数练习
+2024-07-12
 1. 写一个函数可以判断一个数是不是素数。
 ```
 void sushu(int x)
@@ -671,4 +672,77 @@ void is_leap_yer(int x)
 ```
  **这个函数是返回1 或 0  相比上一题的函数，直接打印出来，他的功能更为单一，更容易让别人去复用**（比如别人不想打印，他只想判断） 
 3. 写一个函数，实现一个整形有序数组的二分查找,
+这个函数主要是考察到 **了数组在传参的过程中，传递的是数组首元素的地址，而不是整个数组。 ** 
+比如有
+```
+main ()
+{
+    int arr[20]={1,2,3,4,5,6,7,8,9};
+    Binary_Search(arr);
+}
+int Binary_Search(int arr)
+{
+    int a = sizeof(arr)/sizeof(arr[0]);
+    printf("%d",a);
+}
+```
+在这段代码中，arr元素个数的计算是在Binary_Search中计算的。但是由于arr传过来的只是一个首地址，所以他的元素个数打印出来就是1
+所以在函数内部计算函数参数部分的数组的元素个数是不靠谱的
+ **所以正确的代码是在函数外部计算数组的元素个数** 
+所以完成二分查找的数组的程序是
+```
+#include <stdio.h>
+
+int Binary_Search(int arr[], int cz, int sz)
+{
+
+    int left = 0;//初始化数组的左边下边
+    int right = sz - 1;//初始化数组的右边下标
+        while (left <= right)
+        {
+            int mid = left + (right - left) / 2;
+                if (arr[mid] > cz)//如果查找到的大于被查找值，那么新的右边界被定义
+                {
+                    right = mid - 1;
+                }
+                else if (arr[mid] < cz)//如果查找到的小于被查找值，那么新的左边界被定义
+                {
+                    left = mid + 1;
+                }
+                else
+                {
+                    return mid;//否则只能等于，然后返回下标
+                }
+        }
+    //如果循环都结束了（left>right），还没有找到，就返回-1（因为下标是大于0的）
+    return -1;
+}
+
+int main()
+{
+    int arr[20] = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 };//定义数组
+    int cz = 16; //定义待查找值
+    int sz = sizeof(arr) / sizeof(arr[0]); //计算数组中元素个数
+
+    int sign = Binary_Search(arr, cz, sz); //输入数组首地址，待查找值和数组的元素个数
+    //根据返回值判断
+    if (sign == -1)
+    {
+        printf("找不到啊\n");
+    }
+    else
+    {
+        printf("找到啦，%d的下标是:%d\n", cz, sign);
+    }
+    return 0;
+}
+
+```
+
 4. 写一个函数，每调用一次这个函数，就会将 num 的值增加1。
+```
+void add(int *num)
+{
+    (*num)++;
+}
+```
