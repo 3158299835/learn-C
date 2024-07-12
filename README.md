@@ -483,3 +483,40 @@ int main()//主函数
 }
 
 ```
+
+### 关机程序
+2024-07-11
+电脑运行起来后，一分钟内关机，如果输入我是猪，就取消关机
+- 这个题考察了goto 语法的使用
+- goto 语法一般不常用，但他可以用来跳深度嵌套的语句。
+
+- 在windows中关机命令是
+- 取消关机是:-a
+```
+#include <stdio.h>
+#include <stdlib.h> //C语言中执行系统命令所包含的头文件
+#include <string.h>//字符串对比头文件
+int main()
+{
+    char input[20] = { 0 };
+    system("shutdown -s -t 60");
+    //system执行cmd命令的函数
+    //shutdown 是用于执行关机操作的命令。
+    //-s 表示关机（shutdown）操作。如果是 -r 则表示重启（reboot）操作。
+    //-t 60 表示设置关机前的倒计时时间为 60 秒。
+again:
+    printf("你的电脑将在60秒后关机，如果输入：我是猪，则取消关机\n");
+    scanf("%s", input);
+    if (strcmp(input, "我是猪") == 0)//对比字符串是否相等时，使用strcmp函数。
+    {
+        system("shutdown -a");
+        printf("对对对，你是猪\n关机已解除");
+    }
+    else
+    {
+        goto again;
+    }
+    return 0;
+}
+
+```
