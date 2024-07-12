@@ -542,3 +542,60 @@ int main()
     return 0;
 }
 ```
+### ----函数部分----
+### 写一个函数，实现对xy的交换
+这部分考验了实参和形参。
+
+ **代码1：** 
+```
+#include <stdio.h>
+
+void Swap(int a,int b) 
+{
+    int z = a;
+    a = b;
+    b = z;
+}
+
+int main() 
+{
+    int a = 0;
+    int b = 0;
+    scanf("%d &d",&a,&b);
+    //交换前
+    printf ("交换前：%d %d",a,b);
+    //交换
+    Swap(a,b);
+    printf ("交换后：%d %d",a,b);
+    return 0;
+}
+```
+ **这个代码是错误代码。** 
+- 因为main函数中是实参，而void中的a b为形参
+- 当代码执行到这一部分的时候，形参是拷贝了实参，它有了自己的地址。在完成交换后只是改变了形参。
+要想正确的交换，则应用到指针。
+- 先把实参的地址传到子程序中，在子程序中通过地址准确的找到main中的实参，然后完成精准的控制。
+```
+#include <stdio.h>
+
+#include <stdio.h>
+
+void Swap(int* pa, int* pb)
+{
+    int z = *pa;
+    *pa = *pb;
+    *pb = z;
+}
+
+int main()
+{
+    int a = 0;
+    int b = 0;
+    scanf("%d %d", &a, &b);
+    //交换前
+    printf("交换前：%d %d", a, b);
+    Swap(&a, &b);
+    printf("交换后：%d %d", a, b);
+    return 0;
+}
+```
