@@ -1,15 +1,42 @@
 # README
 
 ### 介绍
+>  **我把笔记放到了csdn中：** [我的CSDN博客](https://blog.csdn.net/L_Z_J_I/article/details/140400417?spm=1001.2014.3001.5502)
+>  **并在CSDN中继续更新** 
+>  **这个README文件不再更新。** 
+>  **所有的代码被我提交到了这个仓库的另一个分支中: ** [code分支](https://gitee.com/Xiao____liu/learning---c-language/tree/code/)
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+
 
 这些是我在学习C语言的过程中自己练习的一些题目
 
 大家也可以参考着来学习
-
- **我把笔记放到了csdn中：https://blog.csdn.net/L_Z_J_I/article/details/140400417?spm=1001.2014.3001.5502
-并持续更新** 
- **这个README文件不再更新。** 
-所有的代码被我提交到了这个仓库的另一个分支  **code** 
 
 ## 初认C语言
 
