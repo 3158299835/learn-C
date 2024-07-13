@@ -5,6 +5,9 @@
     {
       "AbsoluteMoniker": "D:0:0:{D0B4D9A9-3769-4DFD-86BE-4FB5043302E9}|code\\code.vcxproj|D:\\code\\learning---c-language\\code\\code\\test_7_13.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{D0B4D9A9-3769-4DFD-86BE-4FB5043302E9}|code\\code.vcxproj|solutionrelative:code\\test_7_13.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0B4D9A9-3769-4DFD-86BE-4FB5043302E9}|code\\code.vcxproj|D:\\WINDOWS KITS\\10\\INCLUDE\\10.0.22000.0\\UCRT\\STDIO.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,8 +17,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "stdio.h",
+              "DocumentMoniker": "D:\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\stdio.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\stdio.h",
+              "ToolTip": "D:\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\stdio.h",
+              "RelativeToolTip": "..\\..\\..\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\stdio.h",
+              "ViewState": "AQIAAHMCAAAAAAAAAAASwIUCAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-07-13T10:14:22.042Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -24,7 +40,7 @@
               "RelativeDocumentMoniker": "code\\test_7_13.c",
               "ToolTip": "D:\\code\\learning---c-language\\code\\code\\test_7_13.c",
               "RelativeToolTip": "code\\test_7_13.c",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAACAAAA",
+              "ViewState": "AQIAAOkAAAAAAAAAAAAQwPIAAABIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-07-13T07:53:53.193Z",
               "EditorCaption": ""
