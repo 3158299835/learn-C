@@ -1,8 +1,0 @@
-﻿  3ziqi_game.c
-D:\code\learning---c-language\code\2024-07-14\2024-07-14\3ziqi_game.c(303,30): warning C4013: “CheckWin”未定义；假设外部返回 int
-  test.c
-D:\code\learning---c-language\code\2024-07-14\2024-07-14\test.c(13,22): warning C4013: “time”未定义；假设外部返回 int
-  正在生成代码...
-D:\code\learning---c-language\code\2024-07-14\2024-07-14\3ziqi_game.c(120,1): warning C4716: “game”: 必须返回一个值
-D:\code\learning---c-language\code\2024-07-14\2024-07-14\3ziqi_game.c(528,1): warning C4715: “Detprintf”: 不是所有的控件路径都返回值
-  2024-07-14.vcxproj -> D:\code\learning---c-language\code\2024-07-14\Debug\2024-07-14.exe
