@@ -9,7 +9,7 @@
 #define COLS COL+2
 
 //定义埋雷数量
-#define SetBomNum 80
+#define SetBomNum 10
 #include <stdio.h>
 #include <windows.h>//清屏所用头文件
 #include <stdlib.h> //随机函数头文件
