@@ -86,8 +86,9 @@ int main()
 					DispalyShow(arrShow, ROW, COL);//ÏÔÊ¾showÆåÅÌ
 					DispalyBom(arrBom, ROW, COL);//ÏÔÊ¾bomÆåÅÌ
 				}
+				break;
 			}
-			break;
+
 		}
 
 	} while (input);
