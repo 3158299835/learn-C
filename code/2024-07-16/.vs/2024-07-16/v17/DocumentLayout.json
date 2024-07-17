@@ -1,18 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\mc315\\source\\repos\\2024-07-16\\",
+  "WorkspaceRootPath": "D:\\code\\learning---c-language\\code\\2024-07-16\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D344DF5D-70F9-4D0C-941A-92C186B4DD2A}|2024-07-16\\2024-07-16.vcxproj|C:\\Users\\mc315\\source\\repos\\2024-07-16\\2024-07-16\\game.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{D344DF5D-70F9-4D0C-941A-92C186B4DD2A}|2024-07-16\\2024-07-16.vcxproj|D:\\code\\learning---c-language\\code\\2024-07-16\\2024-07-16\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D344DF5D-70F9-4D0C-941A-92C186B4DD2A}|2024-07-16\\2024-07-16.vcxproj|solutionrelative:2024-07-16\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D344DF5D-70F9-4D0C-941A-92C186B4DD2A}|2024-07-16\\2024-07-16.vcxproj|D:\\code\\learning---c-language\\code\\2024-07-16\\2024-07-16\\game.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{D344DF5D-70F9-4D0C-941A-92C186B4DD2A}|2024-07-16\\2024-07-16.vcxproj|solutionrelative:2024-07-16\\game.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D344DF5D-70F9-4D0C-941A-92C186B4DD2A}|2024-07-16\\2024-07-16.vcxproj|C:\\Users\\mc315\\source\\repos\\2024-07-16\\2024-07-16\\test.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{D344DF5D-70F9-4D0C-941A-92C186B4DD2A}|2024-07-16\\2024-07-16.vcxproj|D:\\code\\learning---c-language\\code\\2024-07-16\\2024-07-16\\test.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{D344DF5D-70F9-4D0C-941A-92C186B4DD2A}|2024-07-16\\2024-07-16.vcxproj|solutionrelative:2024-07-16\\test.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D344DF5D-70F9-4D0C-941A-92C186B4DD2A}|2024-07-16\\2024-07-16.vcxproj|C:\\Users\\mc315\\source\\repos\\2024-07-16\\2024-07-16\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{D344DF5D-70F9-4D0C-941A-92C186B4DD2A}|2024-07-16\\2024-07-16.vcxproj|solutionrelative:2024-07-16\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,43 +22,43 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "game.h",
-              "DocumentMoniker": "C:\\Users\\mc315\\source\\repos\\2024-07-16\\2024-07-16\\game.h",
+              "DocumentMoniker": "D:\\code\\learning---c-language\\code\\2024-07-16\\2024-07-16\\game.h",
               "RelativeDocumentMoniker": "2024-07-16\\game.h",
-              "ToolTip": "C:\\Users\\mc315\\source\\repos\\2024-07-16\\2024-07-16\\game.h",
+              "ToolTip": "D:\\code\\learning---c-language\\code\\2024-07-16\\2024-07-16\\game.h",
               "RelativeToolTip": "2024-07-16\\game.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAABUAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-07-16T13:59:01.916Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "game.c",
-              "DocumentMoniker": "C:\\Users\\mc315\\source\\repos\\2024-07-16\\2024-07-16\\game.c",
+              "DocumentMoniker": "D:\\code\\learning---c-language\\code\\2024-07-16\\2024-07-16\\game.c",
               "RelativeDocumentMoniker": "2024-07-16\\game.c",
-              "ToolTip": "C:\\Users\\mc315\\source\\repos\\2024-07-16\\2024-07-16\\game.c",
+              "ToolTip": "D:\\code\\learning---c-language\\code\\2024-07-16\\2024-07-16\\game.c",
               "RelativeToolTip": "2024-07-16\\game.c",
-              "ViewState": "AQIAADwAAAAAAAAAAAAAAEwAAAACAAAA",
+              "ViewState": "AQIAAMsAAAAAAAAAAAAAANQAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-07-16T13:58:55.254Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "test.c",
-              "DocumentMoniker": "C:\\Users\\mc315\\source\\repos\\2024-07-16\\2024-07-16\\test.c",
+              "DocumentMoniker": "D:\\code\\learning---c-language\\code\\2024-07-16\\2024-07-16\\test.c",
               "RelativeDocumentMoniker": "2024-07-16\\test.c",
-              "ToolTip": "C:\\Users\\mc315\\source\\repos\\2024-07-16\\2024-07-16\\test.c",
+              "ToolTip": "D:\\code\\learning---c-language\\code\\2024-07-16\\2024-07-16\\test.c",
               "RelativeToolTip": "2024-07-16\\test.c",
-              "ViewState": "AQIAABEAAAAAAAAAAAAiwCcAAAAAAAAA",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAAFwAAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-07-16T13:58:44.997Z",
               "EditorCaption": ""

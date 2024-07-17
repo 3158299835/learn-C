@@ -12,7 +12,7 @@
 //带插旗的功能
 //每次输入完可以清屏，然后显示画面
 //具有调试功能(作弊)
-//输入 (x，y,1为炸弹 2为插旗)   
+//输入 (x，y,1为查炸弹 2为插旗)   
 //棋盘1   BOM是存放炸弹的   1为炸弹，  0为空气
 //棋盘2   SHOW是用来显示给玩家看的 
 
@@ -24,28 +24,72 @@
 
 int main()
 {
+	srand((unsigned int)time(NULL));//设置随机种子
 	int input = 0;
-	int arrBom[ROWS][COLS] = { 0 };
+	char arrBom[ROWS][COLS] = { ' '};
 	char arrShow[ROWS][COLS] = { '*' };
 	do
 	{
 		menu();
-		printf("请输入游戏模式");
+		printf("请输入游戏模式:>");
 		scanf("%d", &input);
 		switch (input)
 		{
 			case 1:
 			{
+				system("cls");//输入模式后清屏
 				InitBoard(arrBom, arrShow, ROWS, COLS);//初始化棋盘
-				DispalyShow(arrBom, arrShow, ROW, COL);//显示show棋盘
+				SetBom(arrBom, ROWS, COLS, SetBomNum);//随机埋雷
+				DispalyShow(arrShow, ROW, COL);//显示show棋盘
+				//DispalyBom(arrBom, ROW, COL);//显示bom棋盘
+				while (1)
+				{
+					int a = Boardinput(arrBom, arrShow, ROWS, COLS);//输入
+					if (a == -1)//返回-1被炸死，否则继续
+					{
+						DispalyBom(arrBom, ROW, COL);//显示bom棋盘
+						break;
+					}
+					int win = Win(arrBom, arrShow, ROWS, COLS);//判断输赢
+					if (win == 1)
+					{
+						DispalyBom(arrBom, ROW, COL);//显示bom棋盘
+						break;
+					}
+					DispalyShow(arrShow, ROW, COL);//显示show棋盘
+					//DispalyBom(arrBom, ROW, COL);//显示bom棋盘
+				}
+				break;
 			}
-
-
+			case 2:
+			{
+				system("cls");//输入模式后清屏
+				printf("已开启作弊模式\n");
+				InitBoard(arrBom, arrShow, ROWS, COLS);//初始化棋盘
+				SetBom(arrBom, ROWS, COLS, SetBomNum);//随机埋雷
+				DispalyShow(arrShow, ROW, COL);//显示show棋盘
+				DispalyBom(arrBom, ROW, COL);//显示bom棋盘
+				while (1)
+				{
+					int a = Boardinput(arrBom, arrShow, ROWS, COLS);//输入
+					if (a == -1)//返回-1被炸死，否则继续
+					{
+						DispalyBom(arrBom, ROW, COL);//显示bom棋盘
+						break;
+					}
+					int win = Win(arrBom, arrShow, ROWS, COLS);//判断输赢
+					if (win == 1)
+					{
+						DispalyBom(arrBom, ROW, COL);//显示bom棋盘
+						break;
+					}
+					DispalyShow(arrShow, ROW, COL);//显示show棋盘
+					DispalyBom(arrBom, ROW, COL);//显示bom棋盘
+				}
+			}
+			break;
 		}
 
 	} while (input);
-
-
-
 	return 0;
 }
