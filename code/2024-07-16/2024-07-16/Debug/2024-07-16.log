@@ -1,0 +1,6 @@
+﻿  game.c
+  test.c
+  正在生成代码...
+D:\code\learning---c-language\code\2024-07-16\2024-07-16\game.c(213,1): warning C4715: “Boardinput”: 不是所有的控件路径都返回值
+D:\code\learning---c-language\code\2024-07-16\2024-07-16\game.c(292,1): warning C4715: “Win”: 不是所有的控件路径都返回值
+  2024-07-16.vcxproj -> D:\code\learning---c-language\code\2024-07-16\Debug\2024-07-16.exe
