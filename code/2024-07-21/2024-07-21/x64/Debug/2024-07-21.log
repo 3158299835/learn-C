@@ -1,0 +1,6 @@
+﻿  test.c
+D:\code\learning---c-language\code\2024-07-21\2024-07-21\test.c(23,12): warning C4047: “函数”:“const char *”与“char”的间接级别不同
+D:\code\learning---c-language\code\2024-07-21\2024-07-21\test.c(23,12): warning C4024: “my_strlen”: 形参和实参 1 的类型不同
+D:\code\learning---c-language\code\2024-07-21\2024-07-21\test.c(22,7): warning C4047: “初始化”:“char”与“char [12]”的间接级别不同
+MSVCRTD.lib(exe_main.obj) : error LNK2019: 无法解析的外部符号 main，函数 "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ) 中引用了该符号
+D:\code\learning---c-language\code\2024-07-21\x64\Debug\2024-07-21.exe : fatal error LNK1120: 1 个无法解析的外部命令
