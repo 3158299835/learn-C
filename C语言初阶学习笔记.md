@@ -1,14 +1,14 @@
-# 学习C语言笔记
+# 初阶学习 C 语言可以编写的程序以及个人的理解记录
 
-### 介绍
+### **介绍**
 
-这些是我在学习C语言的过程中自己练习的一些题目
+这些是我在学习C语言的过程中自己练习的一些题目以及个人笔记
 
 大家也可以参考着来学习
 
-正在更新
+更新完毕，后续学习在→[进阶部分](https://blog.csdn.net/L_Z_J_I/article/details/140592334)←可以点击打开
 
-**大家可以在[我的gitee仓库](https://gitee.com/Xiao____liu/learning---c-language) 中下载笔记源文件**
+**大家可以在[我的gitee仓库](https://gitee.com/Xiao____liu/learning---c-language) 中下载笔记源文件**
 
 **笔记源文件可以在Notion中导入**
 
@@ -3078,6 +3078,124 @@ int main()
 			printf("%d ", i);
 		}
 	}
+	return 0;
+}
+```
+
+## 奇数放前，偶数放后的函数
+
+```c
+//输入一个整数数组，实现一个函数,
+//来调整该数组中数字的顺序
+// 使得数组中所有的奇数位于数组的前半部分
+// 所有偶数位于数组的后半部分。
+
+#include<stdio.h>
+
+void move_odd_even(int arr[], int sz)
+{
+	int left = 0;
+	int right = sz - 1;
+	while (left<right)
+	{
+		//从左向右找偶数，停下来
+		while ((left < right) && (arr[left] % 2 == 1))//这里要注意不要让left越界
+		{
+			left++;
+		}
+		//从右向左找奇数数，停下来
+		while ((left < right) && (arr[right] % 2 == 0))
+		{
+			right--;
+		}
+		//交换奇数和偶数
+		if (left < right)
+		{
+			int temp = arr[left];
+			arr[left] = arr[right];
+			arr[right] = temp;
+			left++;//交换这俩数字之后，再往中间聚拢
+			right--;
+		}
+	}
+}
+
+int main()
+{
+	int arr[10] = { 0 };
+	//输入
+	int sz = sizeof(arr) / sizeof(arr[0]);
+	int i = 0;
+	for (i = 0; i < sz; i++)
+	{
+		scanf("%d", &arr[i]);
+	}
+	// 1 2 3 4 5 6 7 8 9 10
+	// 1 3 5 7 9 2 4 6 8 10
+	//调整
+	move_odd_even(arr, sz);
+	//输出
+	for (i = 0; i < sz; i++)
+	{
+		printf("%d ", arr[i]);
+	}
+	return 0;
+}
+```
+
+## 两个数组合并升序
+
+```c
+//有序数列的合并
+//将两个数组的值 输出为一行。按照升序
+//思路 用两个指针来对比大小，谁小输出谁
+#include <stdio.h>	
+int main()
+{
+	int arr1[5] = { 0 };
+	int sz1 = sizeof(arr1) / sizeof(arr1[0]);
+	int arr2[6] = { 0 };
+	int sz2 = sizeof(arr2) / sizeof(arr2[0]);
+	int i = 0;
+	for ( i = 0; i < sz1; i++)
+	{
+		scanf("%d", &arr1[i]);
+	}
+	for (i = 0; i < sz2; i++)
+	{	
+		scanf("%d", &arr2[i]);
+	}
+	int j = 0;
+	int k = 0;
+	while (j < sz1 && k < sz2) //j和k不能越界
+	{
+		if (arr1[j] < arr2[k])
+		{
+			printf("%d ",arr1[j]);//arr1小就输出arr1
+			j++;
+		}
+		else//arr2小就输出arr2
+		{
+			printf("%d ", arr2[k]);
+			k++;
+		}
+	}
+	//循环完之后，可能会有数组没打印完。因为j或者k跳出去了
+	if (j < 10)//说明arr1没打印完，要从j开始打印
+	{
+		for (; j < sz1; j++)
+		{
+			printf("%d ", arr1[j]);
+		}
+	}
+	else//否则说明arr2没打印完，要从K开始打印
+	{
+		for (; k < sz2; k++)
+		{
+			printf("%d ", arr2[k]);
+		}
+	}
+
 	return 0;
 }
 ```
