@@ -703,6 +703,8 @@ int main()
 
 ## 函数指针
 
+### 什么是函数指针
+
 函数指针的本质是 指向函数的指针
 
 函数的名字就是他的地址。和数组一样
@@ -722,4 +724,768 @@ int main()
 	return 0;
 }
 
+```
+
+### 两段代码加深函数指针的理解
+
+```c
+//代码1
+(*(void(*)())0)();
+//代码2
+void(*signal(int ,void(*)(int)))(int);
+```
+
+第一个代码
+`void(*)()`是一个函数指针类型。他把0强制转换为void函数指针
+然后0的地址的函数进行调用。
+
+第二个代码
+
+首先，从最内层开始分析。
+
+1.  因为`signal`左边的 `*` 没有被括起来。所以他`signal`是和右边绑定的。
+所以`signal ( int, void ( * ) ( int ) )`  是一个小块儿。
+其中`signal` 是一个函数名：`int` 表示这个函数的第一个参数是一个整数类型。
+`void ( * ) ( int )` 表示这个函数的第二个参数是一个指向函数的指针变量，该函数接受一个整形参数并且没有返回值。（就像我们接受一个整形变量一样 `int *`）
+2. 可以看到。函数`signal ( int, void ( * ) ( int ) )`  的外边又被一层：`void ( * ) ( int )`所包住。
+而`*`位于的括号内是用来存放函数指针变量的。**所以 signal 函数的返回值是一个函数指针变量。比如返回的函数指针变量是p 那么 外边的一层就等于`void ( *p ) ( int )` 就可以表示p所指向的函数是一个接受int型变量，没有返回的函数。**
+3. 所以整个 `void ( * signal ( int, void ( * ) ( int ) ) ) ( int );` 表示 signal 函数的返回值是一个函数指针变量，返回的函数指针变量所指向的函数是一个接受一个整数参数并且没有返回值。
+4.  最后 `void (*signal(int, void (*)(int)))(int);`表示整个`signal`函数的返回类型是一个函数指针，该指针指向一个函数，这个函数接受一个整型参数并返回`void`。
+
+**简化声明使用`typedef`**
+
+为了提高代码的可读性，我们可以使用`typedef`来简化`signal`函数的声明：
+
+```c
+typedef void(*acc)(int)
+acc signal(int, acc);
+```
+
+这里，`acc`是一个新的类型名，代表了一个函数指针类型，指向一个接受整型参数且返回`void`的函数。使用`typedef`使得`signal`函数的声明更加清晰，提高了代码的可读性。
+
+### 使用回调函数，在函数指针在函数内部调用其他函数来实现+ - * 计算器
+
+函数中利用函数指针调用其他函数叫做**函数回调。**
+
+```c
+//回调函数
+//利用函数指针在函数内部引用函数
+//实现一个 + - * /计算器
+#include <stdio.h>
+
+void menu()
+{
+	printf("*************************************\n");
+	printf("********   1. add   2. sub   ********\n");
+	printf("********   3. mul   4. div   ********\n");
+	printf("*******    0. exit           ********\n");
+	printf("*************************************\n");
+}
+
+int add(int x, int y)
+{
+	return x + y;
+}
+int sub(int x, int y)
+{
+	return x - y;
+}
+int mul(int x, int y)
+{
+	return x * y;
+}
+int div(int x, int y)
+{
+	return x / y;
+}
+void compute(int(*pf)(int, int))
+//定义compute函数的输入参数为 int类型的函数指针、
+// 且指向的函数的输入参数为int  int
+{
+	int x = 0;
+	int y = 0;
+	int ret = 0;
+	printf("输入操作数>:");
+	scanf("%d %d", &x, &y);
+	ret = pf(x, y);
+	printf("%d\n", ret);
+}
+
+int main()
+{
+	int input = 0;
+	do
+	{
+		menu();
+		printf("请输入功能:>");
+		scanf("%d", &input);
+		switch (input)
+		{
+		case 1:
+			compute(add);
+			break;
+		case 2:
+			compute(sub);
+			break;
+		case 3:
+			compute(mul);
+			break;
+		case 4:
+			compute(div);
+			break;
+		case 0:
+			printf("退出计算器\n");
+			break;
+		default:
+			printf("输入错误，请重新输入\n");
+			break;
+		}
+
+	} while (input);
+	
+
+	return 0;
+}
+```
+
+## 函数指针数组
+
+有套娃了  233
+
+类比一下吧，
+
+指针数组是 int* arr1[5];      cahr* arr2[6];
+
+函数指针是 int (*pf) (int, int);
+
+所以函数指针数组是把指针变量pf变成指针数组arr[] 
+也就是int (*arr[4]) (int, int);
+
+那上小节的计算器举例。可以更改成这样子
+
+可以看到，利用函数指针数组极大地增大了简洁性。 以及可拓展性
+
+这个又叫做**转移表**  因为他利用函数指针数组的下标来在不同的函数之间跳转
+
+```c
+//利用函数指针数组来改写一下
+#include <stdio.h>
+
+void menu()
+{
+	printf("*************************************\n");
+	printf("********   1. add   2. sub   ********\n");
+	printf("********   3. mul   4. div   ********\n");
+	printf("*******    0. exit           ********\n");
+	printf("*************************************\n");
+}
+
+int add(int x, int y)
+{
+	return x + y;
+}
+int sub(int x, int y)
+{
+	return x - y;
+}
+int mul(int x, int y)
+{
+	return x * y;
+}
+int div(int x, int y)
+{
+	return x / y;
+}
+
+int main()
+{
+	int input = 0;
+	int x = 0;
+	int y = 0;
+	int ret = 0;
+	int (*pfArr[5])(int, int) = { 0, add,sub,mul,div };//补0是为了输入1为add
+	do
+	{
+		menu();
+		printf("请输入功能:>");
+		scanf("%d", &input);
+		if (input == 0)
+		{
+			printf("退出计算器\n");
+			break;
+		}
+		else if (input >= 1 && input <= 4)
+		{
+			printf("请输入两个操作数:>");
+			scanf("%d %d", &x, &y);
+			ret = pfArr[input](x, y);
+			printf("计算结果为:%d\n", ret);
+		}
+		else
+		{
+			printf("选择错误\n");
+		}
+	} while (input);
+
+	return 0;
+}
+```
+
+## 指向函数指针数组的指针
+
+指向函数指针数组的指针是一个`指针`
+
+指针指向一个`数组`，数组的元素都是`函数`
+
+这是一个函数指针数组`int (*pfArr[5])(int, int) = { 0, add,sub,mul,div };`
+
+我们要定义一个指向这个指针数组的指针。 
+
+那么我们的指**针的类型 就是 数组+函数指针**
+
+**数组则是** 加 `[5]`   函数指针类型则是`int (*) (int ,int)` 
+所以就定义一个指针变量  `ppArr`   他得是数组所以加`[5]` 为 `ppArr[]` 
+
+pparr[]  又要指向函数指针类型  `int (*) (int ,int)`  
+所以他最终为`int (*(*ppArr[5])) (int ,int)`  
+其中ppArr`*` 表示 `ppArr` 是一个数组，数组中的每个元素都是一个指针。
+
+## 回调函数
+
+回调函数是通过函数指针的函数。如果你把函数的指针（地址）作为参数传递给另一个函数，当这个指针被用来调用其所指向的函数。我们就说这个叫回调函数。
+回调函数不是有该函数的实现方直接调用，而是在特定的事件或条件发生时由另外的一方调用的，用于对该事件或者条件进行相应。
+
+### 利用qsort来实现int数组的升序/降序排列
+
+qsort 头文件是 `stdlib.h`
+
+1. `void`指针：
+    - 明白`void`指针可以接受任意类型的数据。
+    - 清楚`void`指针在使用前需要进行强制类型转换才能进行解引用和算术运算。
+2. `qsort`函数的参数，包括要排序数据的起始位置、元素个数、元素大小以及自定义的比较函数指针。
+`int(*cmp)(const void* e1, const void* e2)`
+
+```c
+//利用qsort来实现int数组的升序/降序排列
+
+#include<stdio.h>
+#include<stdlib.h>
+
+//void qsort(void* base,//要排序的数据的起始位置
+//	size_t num,//待排序的元素个数
+//	size_t width,//待排序的元素大小（单位为字节）
+//	int(*cmp)(const void* e1, const void* e2)//函数指针-比较函数
+//	//这个函数需要自己写，返回大于0  等于0    小于0的数字
+//);
+
+void cmp_int(const void* e1, const void* e2)
+{
+	return (*(int*)e2 - *(int*)e1);//此时是降序，更改e1 和e2 就可以实现升序
+}
+// void指针式无类型指针，它可以接受任意类型的数据
+// 但是它无法进行解引用和 +  - 的操作。 在使用之前需要进行强制类型转换
+
+int main()
+{
+	int arr[] = { 0,1,2,3,4,5,6,7,8,9 };
+	int sz = sizeof(arr) / sizeof(arr[0]); 
+	int i = 0;
+
+	//排序
+	qsort(arr, sz, sizeof(arr[0]), cmp_int);
+
+	for (i = 0; i < sz; i++)
+	{
+		printf("%d ", arr[i]);
+	}
+	return 0;
+}
+```
+
+### 自己写一个qsort，然后实现结构体内数字、字符串、和int型排序
+
+```c
+//自己写一个qsort。然后判断。
+#include <stdlib.h>
+
+//比较整形的
+int cmp_int(const void* e1, const void* e2)
+{
+	return (*(int*)e1 - *(int*)e2);
+}
+
+void test1()
+{
+	//int arr[] = { 9,8,7,6,5,4,3,2,1,0 };
+	int arr[] = { 0,1,2,3,4,5,6,7,8,9 };
+	//0 1 2 3 4 5 6 7 8 9
+	//把数组排成升序
+	int sz = sizeof(arr) / sizeof(arr[0]);
+	//bubble_sort(arr, sz);
+
+	qsort(arr, sz, sizeof(arr[0]), cmp_int);
+
+	int i = 0;
+	for (i = 0; i < sz; i++)
+	{
+		printf("%d ", arr[i]);
+	}
+}
+
+//定义一个结构体
+struct Stu
+{
+	char name[20];
+	int age;
+};
+//交换两个元素的方法
+//char是为了能够交换不同的元素，比如int、char、short等、
+//根据函数传来的步长来交换字节。
+void Swap(char* buf1, char* buf2, int width)
+{
+	int i = 0;
+	for (i = 0; i < width; i++)
+	{
+		char tmp = *buf1;
+		*buf1 = *buf2;
+		*buf2 = tmp;
+		buf1++;
+		buf2++;
+	}
+}
+
+//定义自己的比较函数，。。输入起始位置、元素长度、字节长度、比较函数
+void bubble_sort(void* base, int sz, int width, int(*cmp)(const void* e1, const void* e2))
+{
+	int i = 0;
+	//趟数
+	for (i = 0; i < sz - 1; i++)
+	{
+		int flag = 1;//假设数组是排好序
+		//一趟冒泡排序的过程
+		int j = 0;
+		for (j = 0; j < sz - 1 - i; j++)
+		{
+			//这里的cmp是需要另外编写的。
+			//因为并不知道使用这个函数的人是判断float还是iint或者是别的
+			//进行对比的时候。传送过去的都是char类型的地址。他们的步长有width决定跳过几个字节再传送地址。
+			//会在我们编写的对比函数中对比之后再返回值进行判断然后交换
+			if (cmp((char*)base + j * width, (char*)base + (j + 1) * width) > 0)
+			{
+				//交换
+				Swap((char*)base + j * width, (char*)base + (j + 1) * width, width);
+				flag = 0;//如果一趟发现没有一次发生交换。那么就退出排序
+			}
+		}
+		if (flag == 1)
+		{
+			break;
+		}
+	}
+}
+
+//abbdef
+//abbqwerttt
+//使用strcmp对比字符串时。是按位对比。a=a、b=b ..d<q 所以下面的大
+//也就是说，在升序排列时，a开头的字母会在最前。z在最后 相同则比较下一个字母
+//注意在定义的时候，实用的是const void*
+//因为void*可以接受任何类型的指针，在使用的时候只需要进行类型转换就可以了。
+//结构体比较字符串大小
+int cmp_stu_by_name(const void* e1, const void* e2)
+{
+	//strcmp --> >0 ==0 <0
+	return strcmp(((struct Stu*)e1)->name, ((struct Stu*)e2)->name);
+}
+
+//在进行结构体元素比较的时候，因为传的是地址，。所以用箭头符号来引出元素。
+
+//结构体比较年龄大小
+int cmp_stu_by_age(const void* e1, const void* e2)
+{
+	return ((struct Stu*)e1)->age - ((struct Stu*)e2)->age;
+}
+
+//测试使用qsort来排序结构数据
+void test2()
+{
+	struct Stu s[] = { {"zhangsan", 15}, {"lisi", 30}, {"wangwu", 25} };
+	int sz = sizeof(s) / sizeof(s[0]);
+	//qsort(s, sz, sizeof(s[0]), cmp_stu_by_name);
+	qsort(s, sz, sizeof(s[0]), cmp_stu_by_age);//传入自己写的比较age大小的函数
+}
+//使用自己写的冒泡排序来对int型数组的元素排序
+void test3()
+{
+	int arr[] = { 9,8,7,6,5,4,3,2,1,0 };
+	int sz = sizeof(arr) / sizeof(arr[0]);
+	bubble_sort(arr, sz, sizeof(arr[0]), cmp_int);
+	//输出
+	int i = 0;
+	for (i = 0; i < sz; i++)
+	{
+		printf("%d ", arr[i]);
+	}
+}
+//测试使用自己写的排序函数来排序结构数据中的字符串
+void test4()
+{
+
+	struct Stu s[] = { {"zhangsan", 15}, {"lisi", 30}, {"wangwu", 25} };
+	int sz = sizeof(s) / sizeof(s[0]);
+	bubble_sort(s, sz, sizeof(s[0]), cmp_stu_by_name);
+	//bubble_sort(s, sz, sizeof(s[0]), cmp_stu_by_age);
+}
+
+int main()
+{
+	//test1();
+	//test2();
+	//test3();
+	test4();
+	return 0;
+}
+```
+
+这段 C 语言代码主要实现了自定义的排序算法和对不同数据类型（整型数组、结构体数组）的排序操作。
+
+**1. 比较函数 `cmp_int`**：
+- 这个函数用于比较两个整数。它通过将两个指针转换为 `int` 类型，然后计算差值来确定大小关系。
+
+**2. `test1` 函数**：
+- 定义了一个整数数组 `arr`，并通过 `qsort` 函数对其进行升序排序。
+- `qsort` 函数需要四个参数：待排序的数组、数组元素个数、每个元素的大小以及比较函数的指针。
+
+**3. 结构体 `Stu` 的定义**：
+- 包含一个字符数组 `name` 用于存储姓名和一个整数 `age` 表示年龄。
+
+**4. `Swap` 函数**：
+- 用于交换两个元素，通过逐个字节交换来实现不同类型元素的交换。
+
+**5. `bubble_sort` 函数**：
+- 这是一个冒泡排序函数，它接受一个通用的指针 `base`、元素个数 `sz`、每个元素的宽度 `width` 和比较函数的指针 `cmp`。
+- 在函数内部，通过循环比较相邻元素并根据比较结果进行交换。
+
+**6. 比较函数 `cmp_stu_by_name` 和 `cmp_stu_by_age`**：
+- `cmp_stu_by_name` 用于按照结构体中 `name` 字段的字符串进行比较。
+- `cmp_stu_by_age` 用于按照结构体中 `age` 字段的整数值进行比较。
+
+**7. `test2` 函数**：
+- 定义了一个结构体数组 `s`，并使用 `qsort` 函数根据年龄进行排序。
+
+**8. `test3` 函数**：
+- 对整数数组使用自定义的冒泡排序函数 `bubble_sort` 进行排序。
+
+**9. `test4` 函数**：
+- 对结构体数组使用自定义的冒泡排序函数 `bubble_sort` 根据姓名进行排序。
+
+## 数组名的理解
+
+总结
+
+> sizeof中只有数组名单独出现才是代表整个数组，有别的都不行其他都是**首元素**地址
+sizeof只关注类型。不关注数值
+> 
+> 
+> 1.sizeof(数组名)，这里的数组名表示整个数组，计算的是整个数组的大小。
+> 2.&数组名，这里的数组名表示整个数组，取出的是整个数组的地址。
+> 3.除此之外所有的数组名都表示首元素的地址。
+> 
+
+```c
+
+数组名的理解
+指针的运算和指针类型的意义
+
+int main()
+{
+	int a[] = { 1,2,3,4 };
+
+	printf("%d\n", sizeof(a));//16
+	//sizeof(数组名)，数组名表示整个数组，计算的是整个数组的大小，单位是字节
+	printf("%d\n", sizeof(a + 0));//4
+	//a不是单独放在sizeof内部，也没有取地址，所以a就是首元素的地址，a+0还是首元素的地址
+	//是地址，大小就是4/8个字节
+	printf("%d\n", sizeof(*a));//4
+	//*a中的a是数组首元素的地址，*a就是对首元素的地址解引用，找到的就是首元素
+	//首元素的大小就是4个字节
+	printf("%d\n", sizeof(a + 1));
+	//这里的a是数组首元素的地址
+	//a+1是第二个元素的地址
+	//sizeof(a+1)就是地址的大小
+	printf("%d\n", sizeof(a[1]));//4
+	//计算的是第二个元素的大小
+	printf("%d\n", sizeof(&a));//4/8
+	//&a取出的数组的地址，数组的地址，也就是个地址
+	printf("%d\n", sizeof(*&a));//16
+	//&a----> int(*)[4]
+	//&a拿到的是数组名的地址，类型是 int(*)[4],是一种数组指针
+	//数组指针解引用找到的是数组
+	//*&a ---> a
+	//
+	//2.
+	//&和*抵消了
+	//*&a ---> a
+	//
+ //printf("%d\n", sizeof(&a + 1));//4/8
+	//&a取出的是数组的地址
+	//&a-->  int(*)[4]
+	//&a+1 是从数组a的地址向后跳过了一个（4个整型元素的）数组的大小
+	//&a+1还是地址，是地址就是4/8字节
+	//
+	printf("%d\n", sizeof(&a[0]));//4/8
+	//&a[0]就是第一个元素的地址
+	//计算的是地址的大小
+	printf("%d\n", sizeof(&a[0] + 1));//4/8
+	//&a[0]+1是第二个元素的地址
+	//大小是4/8个字节
+	//&a[0]+1 ---> &a[1]
+	//
+	return 0;
+}
+
+int main()
+{
+	char arr[] = { 'a','b','c','d','e','f' };
+	printf("%d\n", sizeof(arr));//6
+	//sizeof(数组名)
+	printf("%d\n", sizeof(arr + 0));//4/8
+	//arr + 0 是数组首元素的地址
+	printf("%d\n", sizeof(*arr));//1
+	//*arr就是数组的首元素，大小是1字节
+	//*arr --> arr[0]
+	//*(arr+0) --> arr[0]
+	printf("%d\n", sizeof(arr[1]));//1
+	printf("%d\n", sizeof(&arr));//4/8
+	//&arr是数组的地址，是地址就是4/8个字节
+	printf("%d\n", sizeof(&arr + 1));//4/8
+	//&arr + 1是数组后的地址
+	//
+	printf("%d\n", sizeof(&arr[0] + 1));//4/8
+	//&arr[0] + 1是第二个元素的地址
+	//
+	return 0;
+}
+
+#include <string.h>
+
+int main()
+{
+	char arr[] = { 'a','b','c','d','e','f' };
+
+	printf("%d\n", strlen(arr));//随机值  没\0
+	printf("%d\n", strlen(arr + 0));//随机值
+
+//	printf("%d\n", strlen(*arr));//--> strlen('a');-->strlen(97);//野指针
+//	printf("%d\n", strlen(arr[1]));//-->strlen('b')-->strlen(98);
+
+	printf("%d\n", strlen(&arr));//随机值
+	printf("%d\n", strlen(&arr + 1));//随机值-6
+	printf("%d\n", strlen(&arr[0] + 1));//随机值-1
+
+	return 0;
+}
+
+int main()
+{
+	//char arr[] = { 'a', 'b', 'c', 'd', 'e', 'f' };
+
+	char arr[] = "abcdef";
+	//strlen是求字符串长度的，关注的是字符串中的\0，计算的是\0之前出现的字符的个数
+	//strlen是库函数，只针对字符串
+	//sizeof只关注占用内存空间的大小，不在乎内存中放的是什么
+	//sizeof是操作符
+	//
+	//[a b c d e f \0]
+	printf("%d\n", strlen(arr));//6
+	printf("%d\n", strlen(arr + 0));//6
+	//printf("%d\n", strlen(*arr));//err
+	//printf("%d\n", strlen(arr[1]));//err
+	printf("%d\n", strlen(&arr));//6
+	printf("%d\n", strlen(&arr + 1));//随机值
+	printf("%d\n", strlen(&arr[0] + 1));//5
+
+	//[a b c d e f \0]
+	//printf("%d\n", sizeof(arr));//7
+	//printf("%d\n", sizeof(arr + 0));//4/8
+	//printf("%d\n", sizeof(*arr));//1
+	//printf("%d\n", sizeof(arr[1]));//1
+	//printf("%d\n", sizeof(&arr));//4/8
+	//printf("%d\n", sizeof(&arr + 1));//4/8
+	//printf("%d\n", sizeof(&arr[0] + 1));//4/8
+
+	return 0;
+}
+
+	char arr[] = "abcdef";
+	//strlen是求字符串长度的，关注的是字符串中的\0，计算的是\0之前出现的字符的个数
+	//strlen是库函数，只针对字符串
+	//sizeof只关注占用内存空间的大小，不在乎内存中放的是什么
+	//sizeof是操作符
+	//
+	//[a b c d e f \0]
+	printf("%d\n", strlen(arr));//6
+	printf("%d\n", strlen(arr + 0));//6
+	//printf("%d\n", strlen(*arr));//err
+	//printf("%d\n", strlen(arr[1]));//err
+	printf("%d\n", strlen(&arr));//6
+	printf("%d\n", strlen(&arr + 1));//随机值
+	printf("%d\n", strlen(&arr[0] + 1));//5
+
+int main()
+{
+	char* p = "abcdef";
+	printf("%d\n", sizeof(p));
+	printf("%d\n", sizeof(p + 1));
+	printf("%d\n", sizeof(*p));
+	printf("%d\n", sizeof(p[0]));
+	printf("%d\n", sizeof(&p));
+	printf("%d\n", sizeof(&p + 1));
+	printf("%d\n", sizeof(&p[0] + 1));
+
+	printf("%d\n", strlen(p));
+	printf("%d\n", strlen(p + 1));
+	printf("%d\n", strlen(*p));
+	printf("%d\n", strlen(p[0]));
+	printf("%d\n", strlen(&p));
+	printf("%d\n", strlen(&p + 1));
+	printf("%d\n", strlen(&p[0] + 1));
+
+	return 0;
+}
+
+int main()
+{
+	int a[3][4] = { 0 };
+	printf("%d\n", sizeof(a));
+	printf("%d\n", sizeof(a[0][0]));
+	printf("%d\n", sizeof(a[0]));
+	a[0]是第一行这个一维数组的数组名，单独放在sizeof内部，a[0]表示第一个整个这个一维数组
+	sizeof(a[0])计算的就是第一行的大小
+	printf("%d\n", sizeof(a[0] + 1));
+	a[0]并没有单独放在sizeof内部，也没取地址，a[0]就表示首元素的地址
+	就是第一行这个一维数组的第一个元素的地址，a[0] + 1就是第一行第二个元素的地址
+	printf("%d\n", sizeof(*(a[0] + 1)));
+	a[0] + 1就是第一行第二个元素的地址
+	*(a[0] + 1))就是第一行第二个元素
+	printf("%d\n", sizeof(a + 1));//4/8
+	a虽然是二维数组的地址，但是并没有单独放在sizeof内部，也没取地址
+	a表示首元素的地址，二维数组的首元素是它的第一行，a就是第一行的地址
+	a+1就是跳过第一行，表示第二行的地址
+	printf("%d\n", sizeof(*(a + 1)));//16
+	*(a + 1)是对第二行地址的解引用，拿到的是第二行
+	*(a+1)-->a[1]
+	sizeof(*(a+1))-->sizeof(a[1])
+	
+	printf("%d\n", sizeof(&a[0] + 1));//4/8
+	&a[0] - 对第一行的数组名取地址，拿出的是第一行的地址
+	&a[0]+1 - 得到的是第二行的地址
+	
+	printf("%d\n", sizeof(*(&a[0] + 1)));//16
+	printf("%d\n", sizeof(*a));//16
+	a表示首元素的地址，就是第一行的地址
+	*a就是对第一行地址的解引用，拿到的就是第一行
+	
+	printf("%d\n", sizeof(a[3]));//16
+	只关注类型，不关注值 
+	printf("%d\n", sizeof(a[0]));//16
+
+	int a = 10;
+	sizeof(int);
+	sizeof(a);
+
+	return 0;
+}
+```
+
+## 指针笔试题
+
+```c
+
+#include <stdio.h>
+
+int main()
+{
+	int a[5] = { 1, 2, 3, 4, 5 }; 
+	int* ptr = (int*)(&a + 1);
+	//取地址a是数组a的地址  +1  后 是数组最后一个元素的地址再+1
+	printf("%d,%d", *(a + 1), *(ptr - 1));
+	//a+1  a是首元素的地址，+1是第二个元素的地址，再解引用就是 2     
+	//ptr -1 是数组指针-1 也就是  a的地址  所以输出为  2   5 
+	return 0;
+}
+
+struct Test
+{
+	int Num;
+	char* pcName;
+	short sDate;
+	char cha[2];
+	short sBa[4];
+}* p = (struct Test*)0x100000;   //把地址值强制类型转换为struct
+//假设p 的值为0x100000。 如下表表达式的值分别为多少？
+//已知，结构体Test类型的变量大小是20个字节
+//x86
+int main()
+{
+	printf("%p\n", p + 0x1);//跳过一个结构体 20个字节
+	//0x100000+20-->0x100014
+	printf("%p\n", (unsigned long)p + 0x1);
+	//100000转换为整数位1048576
+	//1,048,576+1 --> 1,048,577
+	//0x100001 
+	printf("%p\n", (unsigned int*)p + 0x1);//跳过四个字节。 int型
+	//0x100000+4-->0x100004
+	return 0;
+}
+
+int main()
+{
+	int a[4] = { 1, 2, 3, 4 };
+	int* ptr1 = (int*)(&a + 1);
+	//数组最后一个元素的地址+1（+4字节）
+	int* ptr2 = (int*)((int)a + 1);
+	//a转换为int类型后+1  只是+1 不是+四字节
+	//然后转换为int* 的地址。  相当于 a数组第一个元素的地址 + 一个字节。
+	printf("%x,%x", ptr1[-1], *ptr2);
+	return 0;
+}
+
+#include <stdio.h>
+int main()
+{
+	int a[3][2] = { (0, 1), (2, 3), (4, 5) };
+	//考逗号表达式， 这里等效于(1, 3, 5);
+	int* p;
+	p = a[0];//这里是第一行的地址，即第一个元素的地址  也就是 1
+	printf("%d", p[0]);
+	return 0;
+}
+
+int main()
+{
+	int a[5][5];
+	int(*p)[4];
+	//int (*p)[4] 是数组指针变量，用来存放数组
+	p = a;
+	//a在这里是数组的名字，数组名=首元素地址，=第一行的地址，
+	// 它的类型是int (*) [5]
+	//而int(*p)[4]的指针类型是int (*) [4]
+	//所以数组指针p在存a的首元素地址的时候。是觉得这个数组以四个字节为一组去存的
+	//换个说法就是，如果此时对p+1  它的步长是4个字节。
+
+	printf("%p,%d\n", &p[4][2] - &a[4][2], &p[4][2] - &a[4][2]);
+	//	&p [4][2] 的意思是读取以p角度的第四排第二个数字。
+	// 此时p指向的是a的首元素的地址 0 。那么[4][2] 这个数字就要往右+4*4+2=18
+	//	也就是&p [4][2] 取的是数组a的第 18 / 5 = 3 ...3 第4行第4个
+	// 而 &a[4][2] 是第5行第3个。 中间差了4个字节。
+
+	//那么地址相减之后就是 -4   以%d打印就是-4
+	//但是以%p打印地址。就需要打印-4的补码的16进制了
+	//-4的原码是 10000000 00000000 00000000 00000100
+	//反码是     11111111 11111111 11111111 11111011
+	//补码是     11111111 11111111 11111111 11111100
+	//16进制是   F   F    F   F    F   F    F   C
+	
+	return 0;
+}
 ```
