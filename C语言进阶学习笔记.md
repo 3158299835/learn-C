@@ -1488,4 +1488,517 @@ int main()
 	
 	return 0;
 }
+
+#include <stdio.h>
+int main()
+{
+	int aa[2][5] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	int* ptr1 = (int*)(&aa + 1); 
+	//数组地址+1跳过去， = aa最后一个元素的地址+1的地址
+	//这里的&aa取出的是aa的首元素 即一个数组的地址。
+	int* ptr2 = (int*)(*(aa + 1));
+	// 这里的aa是首元素的地址
+	//aa不是单独放在这里面的， 所以此时的aa是二维数组的第一个元素的地址，
+	// 也就是第一行的地址，然后再+1 得到的是第二行第一个元素的地址，
+	printf("%d,%d", *(ptr1 - 1), *(ptr2 - 1));
+	//ptr1 -1 是 最后一个元素的地址。 再解引用  =   10
+	// ptr2 -1  是第二行第一个的元素的地址-1 即第一组最后一个元素的地址，   即  10   5
+	//  10    5 
+	return 0;
+}
+
+#include <stdio.h>
+int main()
+{
+	char* a[] = { "work","at","alibaba" };
+	char** pa = a;
+
+	pa++;
+	printf("%s\n", *pa);
+ 输出at  pa存的是第一个首地址，然后++ 到at
+	return 0;
+}
+
+int main()
+{
+	char* c[] = { "ENTER","NEW","POINT","FIRST" };
+	char** cp[] = { c + 3,c + 2,c + 1,c };
+	char*** cpp = cp;
+
+	printf("%s\n", **++cpp);
+	printf("%s\n", *-- * ++cpp + 3);//ER
+	//先++ 解引用 后-- 再++最后解引用 
+	printf("%s\n", *cpp[-2] + 3);  // ST
+	//  = **(cpp-2) +3 
+	printf("%s\n", cpp[-1][-1] + 1);//EW
+	//==  *(*(cp-1)-1)+1
+	//+1 是最后才操作的，。步长是1字节
+	return 0;
+}
 ```
+
+# 三、字符函数和字符串函数
+
+> 本章重点
+重点介绍处理字符和字符串的库函数的使用和注意事项
+> 
+
+**求字符串长度**
+strlen
+
+**长度不受限制的字符串函数**
+strcpy
+strcat
+strcmp
+
+**长度受限制的字符串函数介绍**
+strncpy
+strncat
+strncmp
+
+**字符串查找**
+strstr
+strtok
+
+**错误信息报告**
+strierror字符操作
+
+**内存操作函数**
+memcpy
+memmove
+memset
+memcmp
+
+## 函数介绍
+
+头文件，<string.h>
+
+### strlen
+
+用来求字符串的长度。计算\0之前的字符数量。
+
+他的反回蚀sze_t。是**无符号的
+所以不要去进行相减的操作，
+对于无符号数字 3-5 的值是大于0的**
+
+`char arr[] = {‘a’,‘b’,‘c’}` 是没有`\0`的
+`char arr[] = “abc”` 是有`\0`的
+
+### strcpy
+
+`char* strcpy(char *destination, const char *source)`
+
+意思是把源头的字符串拷贝到目标字符串
+返回目标空间的起始地址
+传入的是字符串的指针。cahr数组  数组名字就是地址~
+要注意在传入的时候源数据里必须要有\0
+并且目标数组要放得下原数组内的东西
+并且目标空间要能够被修改。
+
+- 源字符串必须以'\0'结束。
+- 会将源字符串中的'\0'拷贝到目标空间。
+- 目标空间必须足够大，以确保能存放源字符串。
+- 目标空间必须可变。
+- 学会模拟实现。
+
+```c
+//写一个strcp
+
+#include<stdio.h>
+#include<string.h>
+#include<assert.h>
+
+////返回目标空间的起始地址
+//int my_strcpy(char* arr1, char* arr2)
+//{
+//	char* p = arr1;
+//	assert(arr1);
+//	assert(arr2);
+//
+//	while (*arr2 != '\0')
+//	{
+//		*arr1++ = *arr2++;
+//	}
+//	*arr2 = '\0';//最后一次要把\赋值上去
+//	return p;
+//}
+
+//简化后
+
+int my_strcpy(char* arr1, char* arr2)
+{
+	char* p = arr1;
+	assert(arr1 && arr2);
+	while (*arr1++ = *arr2++)//赋值为\0后 ascii为0 退出循环
+		;
+	return p;
+}
+
+int main()
+{
+	char arr1[] = "woaini";
+	char arr2[20] = { 0 };
+	my_strcpy(arr2, arr1);
+	printf("%s", arr2);
+
+	return 0;
+}
+```
+
+### strcat
+
+`char* strcpy(char *destination, const char *source)`
+两个参数目标地址和要追加的字符的地址。
+返回目标空间的起始地址
+
+字符串追加 函数
+
+使用的注意事项
+
+- 要追加的目标要有足够大的空间来存放追加的字符串
+- 追加的字符串和被追加的字符串都要有\0
+- 被追加的空间要能够被修改
+
+模拟一下
+
+```c
+#include<stdio.h>
+#include<string.h>
+#include<assert.h>
+//字符串追加
+char* my_strcat(char* dest, const char* src)
+{
+	assert(dest&&src);
+	char* ret = dest; 
+	assert(dest && src);
+	while (*dest != '\0')
+	{
+		dest++;
+	}
+	while (*dest++ = *src++)
+	{	
+		;
+	}
+	return ret;
+}
+
+int main()
+{
+	char arr1[20] = "woaini";
+	char arr2[] = "yuanzhiqi";
+	my_strcat(arr1, arr2);
+	printf("%s", arr1);
+
+	return 0;
+}
+
+```
+
+### strcmp
+
+标准规定:
+第一个字符串大于第二个字符串，则返回大于0的数字第一个字符串等于第二个字符串，则返回0
+第一个字符串小于第二个字符串，则返回小于0的数字
+
+这里的比较不是比较字符串长度，而是按位比较每位字节的大小（ascii码）
+
+就比如abcq 比abdcef 大！
+
+模拟实现strcmp
+
+```c
+#include<stdio.h>
+#include<string.h>
+#include<assert.h>
+//字符串对比函数 strcmp模拟
+//int my_strcmp(const char* str1, const char* str2)
+//{
+//	assert(str1 && str2);
+//	while (*str1 == *str2)
+//	{
+//		if (*str1 == '\0')//相等且都为\0就不用往后比较了。
+//		{
+//			return 0; 
+//		}
+//		str1++;
+//		str2++;
+//	}
+//	//不相等了则代表找到了
+//	if (*str1 > *str2)//找一圈找到一个不一样的，判断大小然后返回值
+//	{
+//		return 1;
+//	}
+//	else
+//	{
+//		return -1;
+//	}
+//}
+//可以改进一下
+int my_strcmp(const char* str1, const char* str2)
+{
+	assert(str1 && str2);
+	while (*str1 == *str2)
+	{
+		if (*str1 == '\0')//相等且都为\0就不用往后比较了。
+		{
+			return 0; 
+		}
+		str1++;
+		str2++;
+	}
+	//不相等了则代表找到了
+	return (*str1 - *str2);
+}
+
+int main()
+{
+	char arr1[20] = "woaini";
+	char arr2[] = "x";
+	int ret = my_strcmp(arr1, arr2);
+	if (ret > 0)
+	{
+		printf(">");
+	}
+	else if(ret < 0)
+	{
+		printf("<");
+	}
+	else
+	{
+		printf("=");
+	}
+	return 0;
+}
+
+```
+
+### strncpy、strncat、strncmp
+
+### strcpy、strcat、strcmp是不受限制的。如果目标承受不了会报错的
+
+**所以我们可以使用长度受限制的函数：**
+strncpy、strncat、strncmp 、他们在传参的时候回多一个无符号整形 num 。
+意为cpy几个字符。追加几个字符。比较几个字符
+
+### strstr
+
+查找子串的一个函数
+
+给一个字符串，在这个字符串里查找另一个字符串
+
+返回这个子串的第一个字符的地址 char*的指针。
+
+找不到则返回空指针NULL
+
+模拟实现。
+
+（但这个不是效率最高的。）
+
+效率高的有KMP算法
+这个算法也是用来实现在一个字符串中查找子字符串的
+效率高，但是实现难度大
+B站搜索：比特大博哥，可以找到KMP算法的实现
+
+```c
+
+char* my_strstr(const char* str1, const char* str2)
+{
+	assert(str1 && str2);
+	//保证不会出现空指针访问
+	const char* s1 = str1;
+	const char* s2 = str2;
+	const char* p = str1;
+	//p为假设从这里开始可以找到子字符串
+	//如果一次没找就+1继续找，直到找到 \0的位置
+
+	while (*p)//到\0则代表没找到。
+	{
+		s1 = p;//把指针s1赋值为p的位置，为这次重新查找子字符串做准备。
+		s2 = str2;//重置待查找的字符串的指针
+		while (*s1!='\0' && *s2!='\0' && *s1 == *s2)//如果子字符串和字符串的指针到\0 就停下，在此基础上如果相等就继续找下一个相等的
+		{
+			s1++;
+			s2++;
+		}
+		if (*s2 == '\0')//如果循环完了之后，待查找的子字符串的指针到\0就代表已经找到了。
+		{
+			return (char*)p;//返回p的地址，
+		}
+		p++;
+	}
+	return NULL;//没找到则返回空指针
+}
+
+int main()
+{
+	char arr1[] = "abcdef";
+	char arr2[] = "def";
+	char* ret = my_strstr(arr1, arr2);
+
+	if (ret == NULL)
+	{
+		printf("子串不存在\n");
+	}
+	else
+	{
+		printf("%s\n", ret);
+	}
+	return 0;
+}
+```
+
+### strtok
+
+`char * strtok(char* *str,const char** sep);`
+
+- 这个函数是用来 切割字符串用的。 **返回分隔符号前的字符串的第一个字符的地址**
+- 但是需要注意这个函数是**会改原字符串**的，他会在你定义的分隔符的地方补`\0` 
+所以在使用的时候要临时拷贝一份字符串，来对拷贝的字符串进行操作。不影响原字符串。
+- 这个函数。传入的第一个参数是待查找的字符串、**第二个参数是可用作分隔符的一个字符集合**
+字符集合这样写的 “@.” 这里面俩都是可以用作字符集合的。可以自己添加。
+- 第一个参数传参的时候。传入的第一个变量有两种情况。
+    - 第一种情况是：传入的变量是一个**字符串地址**，那么他会从字符串第一个字符开始查找，一直到找到分隔符号才停止。然后把这个分隔符变为`\0` 然后返回`\0` 左边的这个字符串的第一个元素的地址。首地址。**并且保存这次的分隔符号的地址。（是的，他是一个有记忆的函数。）**
+    - 第二种情况是：传入的变量是一个**空指针。**那么他会从他上次记忆的分隔符号的地址的下一个地址开始找分隔符。直到找到一个分隔符，记住他的地址。然后替换为`\0`.  并返回这个这次开始查找到的字符串的首元素地址。
+    
+    我们可以使用for循环来用这个函数。不用写的一列一列的。
+    
+    ```c
+    //
+    //strtok
+    //切割字符串
+    //
+    // zhangpengwei@bitejiuyeke.com
+    
+    int main()
+    {
+    	const char* sep = "@.";
+    	char email[] = "zhangpengwei@bitejiuyeke.com.net";
+    	char cp[40] = { 0 };//"zhangpengwei@bitejiuyeke.com"
+    	strcpy(cp, email);
+    
+    	char* ret = NULL;
+    	for (ret = strtok(cp, sep);
+    		ret != NULL;
+    		ret = strtok(NULL, sep))
+    	{
+    		printf("%s\n", ret);
+    	}
+    
+    	//char* ret = strtok(cp, sep);
+    	//if(ret != NULL)
+    	//	printf("%s\n", ret);
+    
+    	//ret = strtok(NULL, sep);
+    	//if (ret != NULL)
+    	//	printf("%s\n", ret);
+    
+    	//ret = strtok(NULL, sep);
+    	//if (ret != NULL)
+    	//	printf("%s\n", ret);
+    
+    	//ret = strtok(NULL, sep);
+    	//if (ret != NULL)
+    	//	printf("%s\n", ret);
+    
+    	return 0;
+    }
+    ```
+    
+
+### strerror <>
+
+设置错误码函数
+
+C语言的库函数，在执行失败的时候，都会设置错误码函数。0 1 2 3 4 5 6 7 8 都是错误码
+
+函数会自动设置。
+
+使用示例，
+
+```c
+#include <errno.h>
+
+int main()
+{
+	//printf("%s\n", strerror(0));
+	//printf("%s\n", strerror(1));
+	//printf("%s\n", strerror(2));
+	//printf("%s\n", strerror(3));
+	//printf("%s\n", strerror(4));
+	//printf("%s\n", strerror(5));
+
+	//errno - C语言设置的一个全局的错误码存放的变量
+
+	FILE* pf = fopen("C:\\Users\\zpeng\\Desktop\\test.txt", "r");
+	if (pf == NULL)
+	{
+		printf("%s\n", strerror(errno));
+		return 1;
+	}
+	else
+	{
+		//
+	}
+	return 0;
+}
+```
+
+### **字符分类函数 <ctype.h>**
+
+[**int isalnum(int c)**](https://www.runoob.com/cprogramming/c-function-isalnum.html)
+
+该函数检查所传的字符是否是字母和数字。
+
+[int isalpha(int c)](https://www.runoob.com/cprogramming/c-function-isalpha.html)
+
+该函数检查所传的字符是否是字母。
+
+[int iscntrl(int c)](https://www.runoob.com/cprogramming/c-function-iscntrl.html)
+
+该函数检查所传的字符是否是控制字符。
+
+[int isdigit(int c)](https://www.runoob.com/cprogramming/c-function-isdigit.html)
+
+该函数检查所传的字符是否是十进制数字。
+
+[int isgraph(int c)](https://www.runoob.com/cprogramming/c-function-isgraph.html)
+
+该函数检查所传的字符是否有图形表示法。
+
+[int islower(int c)](https://www.runoob.com/cprogramming/c-function-islower.html)
+
+该函数检查所传的字符是否是小写字母。
+
+[int isprint(int c)](https://www.runoob.com/cprogramming/c-function-isprint.html)
+
+该函数检查所传的字符是否是可打印的。
+
+[int ispunct(int c)](https://www.runoob.com/cprogramming/c-function-ispunct.html)
+
+该函数检查所传的字符是否是标点符号字符。
+
+[int isspace(int c)](https://www.runoob.com/cprogramming/c-function-isspace.html)
+
+该函数检查所传的字符是否是空白字符。
+
+[**int isupper(int c)**](https://www.runoob.com/cprogramming/c-function-isupper.html)
+
+该函数检查所传的字符是否是大写字母。
+
+[int isxdigit(int c)](https://www.runoob.com/cprogramming/c-function-isxdigit.html)
+
+该函数检查所传的字符是否是十六进制数字。
+
+---
+
+标准库还包含了两个转换函数，它们接受并返回一个 "int”
+
+[int tolower(int c)](https://www.runoob.com/cprogramming/c-function-tolower.html)
+
+该函数把大写字母转换为小写字母。
+
+[int toupper(int c)](https://www.runoob.com/cprogramming/c-function-toupper.html)
+
+该函数把小写字母转换为大写字母。
+
+### memcpy
