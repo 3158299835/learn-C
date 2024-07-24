@@ -1,0 +1,7 @@
+﻿  test.c
+D:\code\learning---c-language\code\2024-07-24\2024-07-24\test.c(217,2): warning C4013: “assert”未定义；假设外部返回 int
+D:\code\learning---c-language\code\2024-07-24\2024-07-24\test.c(237,9): error C2065: “NULL”: 未声明的标识符
+D:\code\learning---c-language\code\2024-07-24\2024-07-24\test.c(237,2): warning C4047: “return”:“char *”与“int”的间接级别不同
+D:\code\learning---c-language\code\2024-07-24\2024-07-24\test.c(246,13): error C2065: “NULL”: 未声明的标识符
+D:\code\learning---c-language\code\2024-07-24\2024-07-24\test.c(246,10): warning C4047: “==”:“char *”与“int”的间接级别不同
+D:\code\learning---c-language\code\2024-07-24\2024-07-24\test.c(248,3): warning C4013: “printf”未定义；假设外部返回 int

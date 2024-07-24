@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\code\\learning---c-language\\code\\2024-07-24\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C0A527AA-480E-45B6-B56A-7A834FC0E8C8}|2024-07-24\\2024-07-24.vcxproj|D:\\code\\learning---c-language\\code\\2024-07-24\\2024-07-24\\test.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{C0A527AA-480E-45B6-B56A-7A834FC0E8C8}|2024-07-24\\2024-07-24.vcxproj|solutionrelative:2024-07-24\\test.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "test.c",
+              "DocumentMoniker": "D:\\code\\learning---c-language\\code\\2024-07-24\\2024-07-24\\test.c",
+              "RelativeDocumentMoniker": "2024-07-24\\test.c",
+              "ToolTip": "D:\\code\\learning---c-language\\code\\2024-07-24\\2024-07-24\\test.c",
+              "RelativeToolTip": "2024-07-24\\test.c",
+              "ViewState": "AQIAAEEBAAAAAAAAAAAAwEkBAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-07-24T04:38:54.723Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
