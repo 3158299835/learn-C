@@ -1,0 +1,4 @@
+﻿  Contacts.c
+D:\code\learning---c-language\code\Contacts\Contacts\Contacts.c(25,2): error C2198: “memset”: 用于调用的参数太少
+  test.c
+  正在生成代码...
