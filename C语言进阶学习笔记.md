@@ -59,7 +59,7 @@
 unsigned 为无符号
 signed     为有符号    默认为有符号的。
 
-在使用unsigned时，32为byte都可以用来做数值位置。
+在使用unsigned时，32为bit都可以用来做数值位置。
 原来的符号位不用了。符号位为1=2^31
 
 > **浮点型家族**
@@ -182,7 +182,7 @@ int main()
 	// 因为为有符号数，所以有符号的概念，高位第一位代表符号。在提升时其余位补符号
 	// 还原为 原码   后为 为10000000000000000000000000000001
 	// 所以打印为-1
-	// 在存入到unsigned char中时。从低位截断8个byte 11111111
+	// 在存入到unsigned char中时。从低位截断8个bit11111111
 	// 因为为无符号，所以没有符号位的概念。在这里也代表数值
 	// 所以整形提升后补0  为00000000000000000000000011111111
 	// 所以打印为 255
@@ -1905,7 +1905,7 @@ int main()
     ```
     
 
-### strerror <>
+### strerror
 
 设置错误码函数
 
@@ -2383,7 +2383,510 @@ int main()
 		printf("找不到\n");
 	return 0;
 }
+```
 
+先输入矩阵的列、在输入行、然后按照行再列的方式已打印
+
+```c
+
+#include<stdio.h>
+//先输入矩阵的列、在输入行、然后按照行再列的方式已打印
+int main()
+{
+	int arr[2][3] = {0};
+	int j = 0;
+	int i = 0;
+	for (j = 0; j < 3; j++)
+	{
+		 for (i = 0; i < 2; i++)
+		{
+			scanf("%d", &arr[i][j]);
+		}
+	}
+
+	for (j = 0; j < 3; j++)
+	{
+		for (i = 0; i < 2; i++)
+		{
+			printf("%d ", arr[i][j]);
+		}
+		printf("\n");
+
+	}
+
+	for (i = 0; i < 2; i++)
+	{
+		for (j = 0; j < 3; j++)
+		{
+			printf("%d ", arr[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+}
 ```
 
 # 四、自定义类型详解（结构体、枚举、联合）
+
+本章重点
+
+- 结构体
+    - 结构体类型的声明
+    - 结构的自引用
+    - 结构体变量的定义和初始化
+    - 结构体内存对齐
+    - 结构体传参
+    - 结构体实现位段(位段的填充&可移植性)
+- 枚举
+    - 枚举类型的定义
+    - 枚举的优点
+    - 枚举的使用
+- 联合
+    - 联合类型的定义
+    - 联合的特点
+    - 联合大小的计算
+
+## 结构体
+
+### 1 结构体的声明
+
+结构体的基础知识：
+结构是一些值的集合，这些值被称为成员变量，结构的成员可以是不同类型的值
+结构体的变量是全局变量还是局部变量。取决于变量放的位置。
+
+### 2 匿名结构体类型
+
+没有名字的结构体叫匿名结构体类型。他只能用一次
+
+### 3 结构体的自引用
+
+数据结构
+数据在内存中的存储结构
+
+- 线形
+    - 顺序表
+        
+        在内存中连续存放。1 2 3 4 5
+        
+    - 链表
+        
+        让1能找到2 ，让2 能找到3.  3能找到4    4能找到5  这样叫链表
+        放下一个节点的地址。
+        这个结构体的一个部分存**数据**—-指针域
+        另一个存放另一个节点的**地址**——-指针域
+        
+- 树形
+    - 二叉树
+
+### 4 结构体的初始化
+
+不记了。跟二维数组那种差不多，嵌套的时候也是一样的。{ {} ， x  , }
+
+### 5 结构体内存对齐
+
+计算结构体的大小
+
+结构体的成员相同，但是顺序不同 。他们所占用的字节大小也是不同的。 
+
+结构体的对齐就是探讨这方面的知识的。
+
+结构体的一些成员。必须存储在某一些对齐的位置以上才可以
+
+**首先得掌握结构体的对齐规则:**
+
+1. 第一个成员在与结构体变量偏移量为0的地址处。
+2. 其他成员变量要对齐到某个数字(对齐数)的整数倍的地址处。对齐数=编译器默认的一个对齐数 与 该成员大小的较小值。
+    1. VS中默认的值为8
+3. **结构体总大小**为最大对齐数(每个成员变量都有一个对齐数)的整数倍。
+4. 如果嵌套了结构体的情况，嵌套的结构体对齐到自己的最大对齐数的整数倍处，结构体的整体大小就是所有最大对齐数(含嵌套结构体的对齐数)的整数倍。
+
+> **使用offsetof可以查看结构体成员在结构中的偏移量**
+> 
+- **为什么存在内存对齐?**
+
+大部分的参考资料都是如是说的:
+
+1. 平台原因(移植原因):
+不是所有的硬件平台都能访问任意地址上的任意数据的;某些硬件平台只能在某些地址处取某些特定类型的数据，否则抛出硬件异常。
+2. 性能原因
+    
+    数据结构(尤其是栈)应该尽可能地在自然边界上对齐。 原因在于，为了访问未对齐的内存，处理器需要作**两次**内存访问;而对齐的内存访问**仅需要一次访问**。
+    
+
+**结构体的内存对齐是拿空间来换取时间的做法。**
+
+那在设计结构体的时候，我们既要满足对齐，又要节省空间，如何做到：
+
+> 让占用空间小的成员尽量集中在一起
+> 
+
+> `#pragma pack(8) //设置默认对齐为8`
+> 
+
+### 6 结构体传参
+
+两种方法：传址和传值调用
+
+传值调用时用  .   
+这个会对系统内存有较大开销
+
+传址调用是用 ->    
+优选传址调用传址调用，并且在后边加上const来保证参数不被修改
+
+### 7 位段
+
+**什么是位段**
+
+**位段的声明:**
+
+位段成员必须是整形家族
+
+位段的成员后面有一个冒号和数字
+
+：3 意思是给他分配 3 个 比特位   （例如存储真、假）
+
+位段是一种节省空间的做法。在开辟时。他是看到是啥类型的就先开辟啥类型，同类型就往里边赛。如果不够就再开辟一个整形。
+
+一般情况下位段是同一类型的东西放到一块儿~
+
+位段是不跨平台的。 跨平台性不好。
+1. int位段被当成无符号还是有符号，未被定义
+2. 从左向右还是从右向左未被定义
+3. 最大位数不确定。16位、32位、64位、最大数不一样
+4. 对于无法容纳的成员，是舍弃还是利用。是重新分配 还是再次开辟不确定
+
+### 静态通讯录的实现、自定义通讯录大小。名称年龄上限等…
+
+**Contacts.c**
+
+```c
+#define _CRT_SECURE_NO_WARNINGS
+#include "Contacts.h"
+//实现一个通讯录
+//存放人的信息
+//人的信息有：姓名、年龄、电话、地址
+// 功能：存放100个人的信息、增加联系人、
+// 删除指定联系人、查找联系人、
+// 修改联系人、排序、显示联系人
+
+//菜单
+void menu()
+{
+	printf("*****************************************\n");
+	printf("*****  1. add            2. dle     *****\n");
+	printf("*****  3. edit           4. search  *****\n");
+	printf("*****  5. show           6. sort    *****\n");
+	printf("*****************************************\n");
+}
+
+//初始化通讯录
+void InitContact(Contact* pc)
+{
+	assert(pc);
+	pc->count = 0;
+	memset(pc->date, 0, sizeof(pc->date));//使用memset来设置单位字节为0
+}
+
+//添加联系人
+void AddContact(Contact* pc)
+{
+	assert(pc);
+	if (pc->count == MAX)//满了就停
+	{
+		printf("联系人已满。无法添加\n");
+		return;
+	}
+	else
+	{
+		//在下标为count的位置添加
+		printf("请输入姓名:>");
+		scanf("%s", pc->date[pc->count].name);
+		printf("请输入年龄:>");
+		scanf("%d", &pc->date[pc->count].age);//这里需要取地址，age是int型，其余为数组
+		printf("请输入性别:>");
+		scanf("%s", pc->date[pc->count].gender);
+		printf("请输入电话:>");
+		scanf("%s", pc->date[pc->count].phone);
+		printf("请输入地址:>");
+		scanf("%s", pc->date[pc->count].address);
+	}
+	pc->count++;
+	printf("录入成功\n");
+
+}
+
+//显示联系人
+void ShowContact(Contact* pc)
+{
+	assert(pc);
+	int i = 0;
+	printf("%-20s\t%-10s\t%-10s%-12s%-20s\n", "姓名", "年龄", "性别", "电话", "地址");
+	for (i = 0; i < pc->count; i++)
+	{
+		printf("%-20s\t%-10d\t%-10s%-12s%-20s\n",
+										pc->date[i].name,
+										pc->date[i].age,
+										pc->date[i].gender,
+										pc->date[i].phone,
+										pc->date[i].address);
+	}
+}
+
+int FindByName(Contact* pc, char name[])
+{
+	assert(pc);
+	int i = 0;
+	for (i = 0; i < pc->count; i++)
+	{
+		if (strcmp(name, pc->date[i].name) == 0)//如果=0就代表下标为i的结构体数组的名字与要查的一样
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+//删除联系人
+void DelContact(Contact* pc)
+{
+	assert(pc);
+	char name[NAME] = { 0 };
+	if (pc ->count == 0)
+	{
+		printf("通讯录中没有信息,不能删除\n");
+		return;
+	}
+	else//输入名字来删除
+	{
+		printf("请输入要删除的人的名字:>");
+		scanf("%s", name);
+		int i = 0;
+
+		//从0到count遍历一下，查找名字
+		int ret = FindByName(pc, name);
+		if (ret == -1)
+		{
+			printf("你要找的人不存在\n");
+			return;
+		}
+
+		//删除:直接让后面一位覆盖前面
+		//从要覆盖的哪一位开始。i不用动
+		for (i = ret; i < pc ->count - 1; i++)//这里虽然最后一位没动，但是我们又不用看它
+		{
+			pc->date[i] = pc->date[i + 1];
+		}
+		pc->count--;
+
+		printf("删除成功\n");
+	}
+}
+
+//编辑联系人
+void EditContact(Contact* pc)
+{
+	assert(pc);
+	char name[NAME] = { 0 };
+	if (pc->count == 0)
+	{
+		printf("通讯录中没有信息,不能编辑\n");
+		return;
+	}
+	else//输入名字来删除
+	{
+		//输入
+		printf("请输入要编辑的人的名字:>");
+		scanf("%s", name);
+		int i = 0;
+		//查找
+		int ret = FindByName(pc, name);
+		if (ret == -1)
+		{
+			printf("你要找的人不存在\n");
+			return;
+		}
+		printf("当前联系人信息\n");
+		printf("%-20s\t%-10s\t%-10s%-12s%-20s\n", "姓名", "年龄", "性别", "电话", "地址");
+		printf("%-20s\t%-10d\t%-10s%-12s%-20s\n",
+												pc->date[ret].name,
+												pc->date[ret].age,
+												pc->date[ret].gender,
+												pc->date[ret].phone,
+												pc->date[ret].address);
+		//编辑
+		printf("请输入修改后的姓名:>");
+		scanf("%s", pc->date[ret].name);
+		printf("请输入修改后的年龄:>");
+		scanf("%d", &pc->date[ret].age);
+		printf("请输入修改后的性别:>");
+		scanf("%s", pc->date[ret].gender);
+		printf("请输入修改后的电话:>");
+		scanf("%s", pc->date[ret].phone);
+		printf("请输入修改后的地址:>");
+		scanf("%s", pc->date[ret].address);
+
+		printf("编辑成功\n");
+	}
+}
+
+//搜索联系人
+void SearchContact(Contact* pc)
+{
+	assert(pc);
+	char name[NAME] = { 0 };
+	if (pc->count == 0)
+	{
+		printf("通讯录中没有信息,不能搜索\n");
+		return;
+	}
+	else//输入名字来删除
+	{
+		//输入
+		printf("请输入要搜索的人的名字:>");
+		scanf("%s", name);
+		int i = 0;
+		//查找
+		int ret = FindByName(pc, name);
+		if (ret == -1)
+		{
+			printf("你要找的人不存在\n");
+			return;
+		}
+		printf("搜索得到联系人信息如下：\n");
+		printf("%-20s\t%-10s\t%-10s%-12s%-20s\n", "姓名", "年龄", "性别", "电话", "地址");
+		printf("%-20s\t%-10d\t%-10s%-12s%-20s\n",
+												pc->date[ret].name,
+												pc->date[ret].age,
+												pc->date[ret].gender,
+												pc->date[ret].phone,
+												pc->date[ret].address);
+	}
+}
+
+int cmp_peo_by_name(const void* e1, const void* e2)
+{
+	//对比人的信息结构体中名字元素的ascii码然后升序排序
+	return strcmp(((peoinfo*)e1)->name, ((peoinfo*)e2)->name);
+	//返回大于0、小于0、等于0；
+}
+
+//通讯录升序排序
+void SortContact(Contact* pc)
+{
+	//使用qsort来排序
+	//排序数据的起始位置、元素个数、元素大小以及自定义的比较函数指针。
+	qsort(pc->date, pc->count, sizeof(peoinfo), cmp_peo_by_name);
+	printf("排序成功。当前为升序");
+}
+```
+
+**Contacts.h**
+
+```c
+#define _CRT_SECURE_NO_WARNINGS
+
+#include<stdio.h>
+#include<string.h>
+#include<assert.h>
+#include<stdlib.h>
+
+#define MAX 100		//通讯录 最大 存储人数
+#define NAME 20		//通讯里 姓名 最大字符串长度
+#define GENDER 10	//通讯录 性别 最大字符串长度
+#define PHONE 12	//通讯录 电话 最大字符串长度
+#define ADDRESS 20	//通讯录 地址 最大字符串长度
+
+//通讯录菜单
+void menu();
+
+//定义通讯录的人的信息的结构体
+typedef struct peo
+{
+	char name[NAME];
+	int age;
+	char gender[GENDER];
+	char phone[PHONE];
+	char address[ADDRESS];
+}peoinfo;
+
+//定义通讯录的结构体
+typedef struct Contact
+{
+	peoinfo date[MAX];//MAX个人的数据
+	int count;//计数
+}Contact;
+
+//初始化通讯录
+void InitContact(Contact* pc);
+
+//添加联系人
+void AddContact(Contact* pc);
+
+//显示联系人
+void ShowContact(Contact* pc);
+
+//删除联系人
+void DelContact(Contact* pc);
+
+//编辑联系人
+void EditContact(Contact* pc);
+
+//搜索联系人
+void SearchContact(Contact* pc);
+
+//通讯录排序
+void SortContact(Contact* pc);
+```
+
+游戏测试文件**test.c**
+
+```c
+#define _CRT_SECURE_NO_WARNINGS
+
+#include "Contacts.h"
+
+int main()
+{
+	Contact con;//创建了一个通讯录
+	InitContact(&con);//初始化通讯录
+	int input = 0;
+	do
+	{
+		menu();
+		printf("请输入功能>:");	
+		scanf("%d", &input);
+		switch (input)
+		{
+		case 1://add联系人
+			AddContact(&con);
+			break;
+		case 2://删除联系人
+			DelContact(&con);
+			break;
+		case 3://编辑联系人
+			EditContact(&con);
+			break;
+		case 4://搜索联系人
+			SearchContact(&con);
+			break;
+		case 5://显示通讯录
+			ShowContact(&con);
+			break;
+		case 6://通讯录按照名字升序
+			SortContact(&con);
+			break;
+		case 0:
+			printf("退出通讯录\n");
+			break;
+		default:
+			printf("输入错误，请重新输入\n");
+			break;
+		}
+
+	} while (input);
+
+	return 0;
+}
+```
+
+## 枚举
