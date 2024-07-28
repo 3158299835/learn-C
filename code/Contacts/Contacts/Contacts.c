@@ -62,6 +62,7 @@ void DestructionCapacity(Contact* pc)
 ////添加联系人
 //void AddContact(Contact* pc)
 //{
+// 
 //	assert(pc);
 //	if (pc->count == MAX)//满了就停
 //	{
