@@ -6,6 +6,9 @@
 // 功能：存放100个人的信息、增加联系人、
 // 删除指定联系人、查找联系人、
 // 修改联系人、排序、显示联系人
+//使用枚举，列出选项常量
+//使用realloc来实现动态增长内存
+
 
 
 //菜单
@@ -15,40 +18,120 @@ void menu()
 	printf("*****  1. add            2. dle     *****\n");
 	printf("*****  3. edit           4. search  *****\n");
 	printf("*****  5. show           6. sort    *****\n");
+	printf("*****  0. exit                      *****\n");
 	printf("*****************************************\n");
 }
 
-//初始化通讯录
-void InitContact(Contact* pc)
+//静态的版本
+////初始化通讯录
+//void InitContact(Contact* pc)
+//{
+//	assert(pc);
+//	pc->count = 0;
+//	memset(pc->date, 0, sizeof(pc->date));//使用memset来设置单位字节为0
+//}
+//动态的版本
+int InitContact(Contact* pc)
 {
 	assert(pc);
 	pc->count = 0;
-	memset(pc->date, 0, sizeof(pc->date));//使用memset来设置单位字节为0
+	//让data指向新开辟出来的空间
+	//开辟三个空间,每个空间的大小是人的信息的结构体所占内存大小
+	//calloc会把所有内存空间初始化为0
+	pc->data = calloc(DEFAULT_SZ, sizeof(peoinfo));
+	if (pc->data == NULL)
+	{
+		printf("InitContact::%s", strerror(errno));
+		return 1;
+	}
+	pc->capacity = DEFAULT_SZ;//开辟了默认值个容量
+	return 0;
+}
+
+//销毁通讯录
+void DestructionCapacity(Contact* pc)
+{
+	assert(pc);
+	free(pc->data);
+	pc->data = NULL;
+	printf("通讯录已销毁\n");
+}
+
+
+////静态版本
+////添加联系人
+//void AddContact(Contact* pc)
+//{
+//	assert(pc);
+//	if (pc->count == MAX)//满了就停
+//	{
+//		printf("联系人已满。无法添加\n");
+//		return;
+//	}
+//	else
+//	{
+//		//在下标为count的位置添加
+//		printf("请输入姓名:>");
+//		scanf("%s", pc->date[pc->count].name);
+//		printf("请输入年龄:>");
+//		scanf("%d", &pc->date[pc->count].age);//这里需要取地址，age是int型，其余为数组
+//		printf("请输入性别:>");
+//		scanf("%s", pc->date[pc->count].gender);
+//		printf("请输入电话:>");
+//		scanf("%s", pc->date[pc->count].phone);
+//		printf("请输入地址:>");
+//		scanf("%s", pc->date[pc->count].address);
+//	}
+//	pc->count++;
+//	printf("录入成功\n");
+//
+//}
+
+//动态版本
+//增容函数
+void CheckCapacity(Contact* pc)
+{
+	assert(pc);
+	if (pc->count == pc->capacity)//联系人=容量
+	{
+		//在起始位值为data的地址处。增加DEFAULT_ADD个sizeof(peoinfo)大小的内存空间
+		//记录联系人的信息，返回值是peoinfo类型的.
+		peoinfo* ptr = (peoinfo*)realloc(pc->data, (pc->capacity + DEFAULT_ADD) * sizeof(peoinfo));
+		if (ptr != NULL)
+		{
+			//不返回空指针才把原来的地址赋值给可能会变的新的地址
+			pc->data = ptr;
+			//当开辟成功后，把容量变量+DEFAULT_ADD.
+			pc->capacity += DEFAULT_ADD;
+		}
+		else//如果等于空指针则报错。
+		{
+			//在前面加上前缀，这样就知道是这里报错了。
+			printf("AddContact:%s\n", strerror(errno));
+			return;//报错后退出
+		}
+		printf("增容成功。当前容量为%d。当前联系人个数为%d\n", pc->capacity, pc->count);
+	}
 }
 
 //添加联系人
 void AddContact(Contact* pc)
 {
 	assert(pc);
-	if (pc->count == MAX)//满了就停
-	{
-		printf("联系人已满。无法添加\n");
-		return;
-	}
-	else
-	{
-		//在下标为count的位置添加
-		printf("请输入姓名:>");
-		scanf("%s", pc->date[pc->count].name);
-		printf("请输入年龄:>");
-		scanf("%d", &pc->date[pc->count].age);//这里需要取地址，age是int型，其余为数组
-		printf("请输入性别:>");
-		scanf("%s", pc->date[pc->count].gender);
-		printf("请输入电话:>");
-		scanf("%s", pc->date[pc->count].phone);
-		printf("请输入地址:>");
-		scanf("%s", pc->date[pc->count].address);
-	}
+	//检查是否要增容
+	CheckCapacity(pc);
+	//在下标为count的位置添加
+	printf("请输入姓名:>");
+	scanf("%s", pc->data[pc->count].name);
+	printf("请输入年龄:>");
+	scanf("%d", &pc->data[pc->count].age);//这里需要取地址，age是int型，其余为数组
+	printf("请输入性别:>");
+	scanf("%s", pc->data[pc->count].gender);
+	printf("请输入电话:>");
+	scanf("%s", pc->data[pc->count].phone);
+	printf("请输入地址:>");
+	scanf("%s", pc->data[pc->count].address);
+
 	pc->count++;
 	printf("录入成功\n");
 
@@ -58,17 +141,23 @@ void AddContact(Contact* pc)
 void ShowContact(Contact* pc)
 {
 	assert(pc);
+	if (pc->count == 0)
+	{
+		printf("通讯录中没有联系人\n");
+		return;
+	}
 	int i = 0;
 	printf("%-20s\t%-10s\t%-10s%-12s%-20s\n", "姓名", "年龄", "性别", "电话", "地址");
 	for (i = 0; i < pc->count; i++)
 	{
 		printf("%-20s\t%-10d\t%-10s%-12s%-20s\n",
-										pc->date[i].name,
-										pc->date[i].age,
-										pc->date[i].gender,
-										pc->date[i].phone,
-										pc->date[i].address);
+										pc->data[i].name,
+										pc->data[i].age,
+										pc->data[i].gender,
+										pc->data[i].phone,
+										pc->data[i].address);
 	}
+	printf("当前容量为%d。当前联系人个数为%d\n", pc->capacity, pc->count);
 }
 
 int FindByName(Contact* pc, char name[])
@@ -77,7 +166,7 @@ int FindByName(Contact* pc, char name[])
 	int i = 0;
 	for (i = 0; i < pc->count; i++)
 	{
-		if (strcmp(name, pc->date[i].name) == 0)//如果=0就代表下标为i的结构体数组的名字与要查的一样
+		if (strcmp(name, pc->data[i].name) == 0)//如果=0就代表下标为i的结构体数组的名字与要查的一样
 		{
 			return i;
 		}
@@ -113,7 +202,7 @@ void DelContact(Contact* pc)
 		//从要覆盖的哪一位开始。i不用动
 		for (i = ret; i < pc ->count - 1; i++)//这里虽然最后一位没动，但是我们又不用看它
 		{
-			pc->date[i] = pc->date[i + 1];
+			pc->data[i] = pc->data[i + 1];
 		}
 		pc->count--;
 
@@ -148,22 +237,22 @@ void EditContact(Contact* pc)
 		printf("当前联系人信息\n");
 		printf("%-20s\t%-10s\t%-10s%-12s%-20s\n", "姓名", "年龄", "性别", "电话", "地址");
 		printf("%-20s\t%-10d\t%-10s%-12s%-20s\n",
-												pc->date[ret].name,
-												pc->date[ret].age,
-												pc->date[ret].gender,
-												pc->date[ret].phone,
-												pc->date[ret].address);
+												pc->data[ret].name,
+												pc->data[ret].age,
+												pc->data[ret].gender,
+												pc->data[ret].phone,
+												pc->data[ret].address);
 		//编辑
 		printf("请输入修改后的姓名:>");
-		scanf("%s", pc->date[ret].name);
+		scanf("%s", pc->data[ret].name);
 		printf("请输入修改后的年龄:>");
-		scanf("%d", &pc->date[ret].age);
+		scanf("%d", &pc->data[ret].age);
 		printf("请输入修改后的性别:>");
-		scanf("%s", pc->date[ret].gender);
+		scanf("%s", pc->data[ret].gender);
 		printf("请输入修改后的电话:>");
-		scanf("%s", pc->date[ret].phone);
+		scanf("%s", pc->data[ret].phone);
 		printf("请输入修改后的地址:>");
-		scanf("%s", pc->date[ret].address);
+		scanf("%s", pc->data[ret].address);
 
 		printf("编辑成功\n");
 	}
@@ -196,11 +285,11 @@ void SearchContact(Contact* pc)
 		printf("搜索得到联系人信息如下：\n");
 		printf("%-20s\t%-10s\t%-10s%-12s%-20s\n", "姓名", "年龄", "性别", "电话", "地址");
 		printf("%-20s\t%-10d\t%-10s%-12s%-20s\n",
-												pc->date[ret].name,
-												pc->date[ret].age,
-												pc->date[ret].gender,
-												pc->date[ret].phone,
-												pc->date[ret].address);
+												pc->data[ret].name,
+												pc->data[ret].age,
+												pc->data[ret].gender,
+												pc->data[ret].phone,
+												pc->data[ret].address);
 	}
 }
 
@@ -216,8 +305,14 @@ int cmp_peo_by_name(const void* e1, const void* e2)
 //通讯录升序排序
 void SortContact(Contact* pc)
 {
+	assert(pc);
+	if (pc->count == 0)
+	{
+		printf("通讯录中没有联系人，不能排序\n");
+		return;
+	}
 	//使用qsort来排序
 	//排序数据的起始位置、元素个数、元素大小以及自定义的比较函数指针。
-	qsort(pc->date, pc->count, sizeof(peoinfo), cmp_peo_by_name);
-	printf("排序成功。当前为升序");
+	qsort(pc->data, pc->count, sizeof(peoinfo), cmp_peo_by_name);
+	printf("排序成功。当前为升序\n");
 }

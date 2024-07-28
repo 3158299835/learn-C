@@ -2,6 +2,7 @@
 
 #include "Contacts.h"
 
+
 int main()
 {
 	Contact con;//创建了一个通讯录
@@ -14,28 +15,37 @@ int main()
 		scanf("%d", &input);
 		switch (input)
 		{
-		case 1://add联系人
+		case ADD://add联系人
+			system("cls");
 			AddContact(&con);
 			break;
-		case 2://删除联系人
+		case DLE://删除联系人
+			system("cls");
 			DelContact(&con);
 			break;
-		case 3://编辑联系人
+		case EDIT://编辑联系人
+			system("cls");
 			EditContact(&con);
 			break;
-		case 4://搜索联系人
+		case SEARCH://搜索联系人
+			system("cls");
 			SearchContact(&con);
 			break;
-		case 5://显示通讯录
+		case SHOW://显示通讯录
+			system("cls");
 			ShowContact(&con);
 			break;
-		case 6://通讯录按照名字升序
+		case SORT://通讯录按照名字升序
+			system("cls");
 			SortContact(&con);
 			break;
-		case 0:
-			printf("退出通讯录\n");
+		case EXIT:
+			system("cls");
+			DestructionCapacity(&con);
+			printf("已退出通讯录\n");
 			break;
 		default:
+			system("cls");
 			printf("输入错误，请重新输入\n");
 			break;
 		}
