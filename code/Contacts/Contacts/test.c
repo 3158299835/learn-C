@@ -41,6 +41,8 @@ int main()
 			break;
 		case EXIT:
 			system("cls");
+			SaveContacts(&con);
+			printf("已保存通讯录\n");
 			DestructionCapacity(&con);
 			printf("已退出通讯录\n");
 			break;

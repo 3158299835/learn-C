@@ -59,9 +59,14 @@ typedef struct Contact
 //初始化通讯录
 int InitContact(Contact* pc);
 
+//加载文件中的通讯录
+void LoadContact(Contact* pc);
+
 //销毁通讯录
 void DestructionCapacity(Contact* pc);
 
+//保存通讯录到文件
+void SaveContacts(const Contact* pc);
 
 //添加联系人
 void AddContact(Contact* pc);

@@ -10,54 +10,6 @@
 //使用realloc来实现动态增长内存
 
 
-
-//菜单
-void menu()
-{
-	printf("*****************************************\n");
-	printf("*****  1. add            2. dle     *****\n");
-	printf("*****  3. edit           4. search  *****\n");
-	printf("*****  5. show           6. sort    *****\n");
-	printf("*****  0. exit                      *****\n");
-	printf("*****************************************\n");
-}
-
-//静态的版本
-////初始化通讯录
-//void InitContact(Contact* pc)
-//{
-//	assert(pc);
-//	pc->count = 0;
-//	memset(pc->date, 0, sizeof(pc->date));//使用memset来设置单位字节为0
-//}
-//动态的版本
-int InitContact(Contact* pc)
-{
-	assert(pc);
-	pc->count = 0;
-	//让data指向新开辟出来的空间
-	//开辟三个空间,每个空间的大小是人的信息的结构体所占内存大小
-	//calloc会把所有内存空间初始化为0
-	pc->data = calloc(DEFAULT_SZ, sizeof(peoinfo));
-	if (pc->data == NULL)
-	{
-		printf("InitContact::%s", strerror(errno));
-		return 1;
-	}
-	pc->capacity = DEFAULT_SZ;//开辟了默认值个容量
-	return 0;
-}
-
-//销毁通讯录
-void DestructionCapacity(Contact* pc)
-{
-	assert(pc);
-	free(pc->data);
-	pc->data = NULL;
-	printf("通讯录已销毁\n");
-}
-
-
 ////静态版本
 ////添加联系人
 //void AddContact(Contact* pc)
@@ -115,6 +67,107 @@ void CheckCapacity(Contact* pc)
 	}
 }
 
+
+
+
+//菜单
+void menu()
+{
+	printf("*****************************************\n");
+	printf("*****  1. add            2. dle     *****\n");
+	printf("*****  3. edit           4. search  *****\n");
+	printf("*****  5. show           6. sort    *****\n");
+	printf("*****  0. exit                      *****\n");
+	printf("*****************************************\n");
+}
+
+//静态的版本
+////初始化通讯录
+//void InitContact(Contact* pc)
+//{
+//	assert(pc);
+//	pc->count = 0;
+//	memset(pc->date, 0, sizeof(pc->date));//使用memset来设置单位字节为0
+//}
+//动态的版本
+int InitContact(Contact* pc)
+{
+	assert(pc);
+	pc->count = 0;
+	//让data指向新开辟出来的空间
+	//开辟三个空间,每个空间的大小是人的信息的结构体所占内存大小
+	//calloc会把所有内存空间初始化为0
+	pc->data = calloc(DEFAULT_SZ, sizeof(peoinfo));
+	if (pc->data == NULL)
+	{
+		printf("InitContact::%s", strerror(errno));
+		return 1;
+	}
+	pc->capacity = DEFAULT_SZ;//开辟了默认值个容量
+
+	printf("已初始化目录\n");
+	//加载文件信息到通讯录
+	LoadContact(pc);
+	printf("已加载文件\n");
+
+	return 0;
+}
+
+void LoadContact(Contact* pc)
+{
+	FILE* pfRead = fopen("Contacts.txt", "rb");
+	if (pfRead == NULL)
+	{
+		perror("LoadContact");
+		return;
+	}
+	//读文件
+	peoinfo tmp = { 0 };
+	//如果没读到东西则停止
+	while (fread(&tmp, sizeof(peoinfo), 1, pfRead) == 1)
+	{
+		CheckCapacity(pc);//检查是否需要扩容
+		pc->data[pc->count] = tmp;
+		pc->count++;
+	}
+	fclose(pfRead);
+	pfRead = NULL;
+}
+
+//保存通讯录
+void SaveContacts(const Contact* pc)
+{
+	assert(pc);
+	FILE* pfWrite = fopen("Contacts.txt", "wb");
+	if (pfWrite == NULL)
+	{
+		perror("SaveContacts");
+		return;
+	}
+	//写文件
+	int i = 0;
+	for (i = 0; i < pc->count ; i++)
+	{
+		fwrite(pc->data + i, sizeof(peoinfo), 1, pfWrite);
+	}
+	//关闭文件
+	fclose(pfWrite);
+	pfWrite = NULL;
+
+}
+
+
+//销毁通讯录
+void DestructionCapacity(Contact* pc)
+{
+	assert(pc);
+	free(pc->data);
+	pc->data = NULL;
+	printf("通讯录已销毁\n");
+}
+
+
+
 //添加联系人
 void AddContact(Contact* pc)
 {
@@ -148,6 +201,7 @@ void ShowContact(Contact* pc)
 		return;
 	}
 	int i = 0;
+	printf("当前联系人信息:\n");
 	printf("%-20s\t%-10s\t%-10s%-12s%-20s\n", "姓名", "年龄", "性别", "电话", "地址");
 	for (i = 0; i < pc->count; i++)
 	{
@@ -235,14 +289,7 @@ void EditContact(Contact* pc)
 			printf("你要找的人不存在\n");
 			return;
 		}
-		printf("当前联系人信息\n");
-		printf("%-20s\t%-10s\t%-10s%-12s%-20s\n", "姓名", "年龄", "性别", "电话", "地址");
-		printf("%-20s\t%-10d\t%-10s%-12s%-20s\n",
-												pc->data[ret].name,
-												pc->data[ret].age,
-												pc->data[ret].gender,
-												pc->data[ret].phone,
-												pc->data[ret].address);
+		ShowContact(pc);
 		//编辑
 		printf("请输入修改后的姓名:>");
 		scanf("%s", pc->data[ret].name);
